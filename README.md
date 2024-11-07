@@ -33,8 +33,8 @@
 [binder-link]: https://mybinder.org/v2/gh/daobook/pybook/main
 [install-badge]: https://img.shields.io/pypi/dw/d2py?label=pypi%20installs
 [install-link]: https://pypistats.org/packages/d2py
-[status-badge]: https://readthedocs.org/projects/d2py/badge/?version=latest
-[status-link]: https://d2py.readthedocs.io/zh/latest/?badge=latest
+[status-badge]: https://readthedocs.org/projects/pybook/badge/?version=latest
+[status-link]: https://pybook.readthedocs.io/zh/latest/?badge=latest
 [download-badge]: https://pepy.tech/badge/d2py
 [download-link]: https://pepy.tech/project/d2py
 
