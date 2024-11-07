@@ -1,5 +1,5 @@
 import pybook
-from pybook.utils.log_config import config_logging
+from d2py.utils.log_config import config_logging
 # -- Project information -----------------------------------------------------
 
 project = 'pybook'

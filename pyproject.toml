@@ -11,7 +11,9 @@ name = "pybook"
 readme = "README.md"
 requires-python = ">=3.12"
 
-dependencies = []
+dependencies = [
+  "d2py"
+]
 
 maintainers = [
   {name = "xinetzone", email = "735613050@qq.com"},
