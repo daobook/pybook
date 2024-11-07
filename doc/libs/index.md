@@ -21,6 +21,5 @@ cffi/index
 pybind11/index
 cppyy/index
 ping3/index
-paramiko/index
 inspect
 ```

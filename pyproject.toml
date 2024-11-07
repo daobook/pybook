@@ -24,6 +24,7 @@ Home = "https://github.com/xinetzone/pybook"
 
 [project.optional-dependencies]
 doc = [
+  "fabric",
   "termcolor",
   "sphinx",
   "docutils",

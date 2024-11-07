@@ -1,5 +1,0 @@
-# Paramiko
-
-```{toctree}
-intro
-```
