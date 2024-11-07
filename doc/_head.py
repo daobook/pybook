@@ -8,7 +8,7 @@ author = 'xinetzone'
 
 # The full version, including alpha/beta/rc tags
 release = pybook.__version__
-html_baseurl = 'https://xinetzone.github.io/pybook'
+html_baseurl = 'https://daobook.github.io/pybook'
 # 配置日志信息
 config_logging(f"{project}.log", project)
 
@@ -75,7 +75,7 @@ comments_config = {
     "hypothesis": True,
     "dokieli": False,
     "utterances": {
-        "repo": "xinetzone/pybook",
+        "repo": "daobook/pybook",
         "optional": "config",
     }
 }
@@ -198,8 +198,8 @@ locale_dirs = ['locales/']  # path is example but recommended.
 gettext_compact = False  # optional.
 
 extra_navbar = """<div>
-版权所有 © 2021 <a href="https://xinetzone.github.io/">xinetzone</a></div>
-<div>由 <a href="https://xinetzone.github.io/demo-book/">EBP</a> 提供技术支持</div>
+版权所有 © 2021 <a href="https://daobook.github.io/">xinetzone</a></div>
+<div>由 <a href="https://daobook.github.io/demo-book/">EBP</a> 提供技术支持</div>
 <a href="https://pybook.readthedocs.io/zh/latest/">版本切换</a>
 """
 autosummary_generate = True
@@ -211,8 +211,8 @@ html_theme_options = {
     # 默认情况下，编辑按钮将指向版本库的根。
     # 如果你的文档被托管在一个子文件夹中，请使用以下配置：
     "path_to_docs": "doc/",  # 文档的路径，默认 `docs/``
-    "github_url": "https://github.com/xinetzone/pybook",
-    "repository_url": "https://github.com/xinetzone/pybook",
+    "github_url": "https://github.com/daobook/pybook",
+    "repository_url": "https://github.com/daobook/pybook",
     "repository_branch": "main",  # 文档库的分支，默认 `master`
     # -- 在导航栏添加一个按钮，链接到版本库的议题 ------------------------------
     # （与 `repository_url` 和 `repository_branch` 一起使用）
@@ -241,7 +241,7 @@ html_theme_options = {
     # 重命名页内目录名称
     # "toc_title": "导航",
     "launch_buttons": {
-        # https://mybinder.org/v2/gh/xinetzone/pybook/main
+        # https://mybinder.org/v2/gh/daobook/pybook/main
         "binderhub_url": "https://mybinder.org",
         # "jupyterhub_url": "https://datahub.berkeley.edu",  # For testing
         "colab_url": "https://colab.research.google.com/",
@@ -253,7 +253,7 @@ html_theme_options = {
     "icon_links": [
         # {
         #     "name": "GitHub",
-        #     "url": "https://github.com/xinetzone/pybook",
+        #     "url": "https://github.com/daobook/pybook",
         #     "icon": "fa-brands fa-square-github",
         #     "type": "fontawesome",
         # },
