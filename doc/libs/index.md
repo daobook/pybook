@@ -4,6 +4,9 @@
 
 ```{toctree}
 typing
+async-task/index
+contextvars/index
+sched
 pil/index
 matplotlib/index
 TVM <https://xinetzone.github.io/tvm-book/>

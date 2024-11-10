@@ -7,6 +7,5 @@ basic/index
 events/index
 canvas/index
 thread
-async-event
 other/index
 ```
