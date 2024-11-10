@@ -4,7 +4,6 @@
 
 ```{toctree}
 typing
-async-task/index
 contextvars/index
 sched
 pil/index

@@ -3,6 +3,7 @@
 ```{toctree}
 :maxdepth: 5
 
+concurrent/index
 arrow/index
 ai/index
 tools/index
