@@ -24,4 +24,5 @@ pybind11/index
 cppyy/index
 ping3/index
 inspect
+ray/index
 ```

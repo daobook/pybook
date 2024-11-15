@@ -4,4 +4,5 @@
 helloworld
 thebe/index
 autoapi/index
+sphinx-proof/index
 ```

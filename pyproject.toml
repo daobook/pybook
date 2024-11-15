@@ -85,6 +85,7 @@ doc = [
   "libarchive-c",
   "sphinxcontrib-katex",
   "ipympl",
+  "sphinx-proof",
 ]
 
 dev = [

@@ -55,7 +55,8 @@ extensions = [
     # "sphinx-jsonschema",
     'sphinx.ext.mathjax',
     # 'jupyterlite_sphinx',
-    # "sphinxcontrib.katex"
+    # "sphinxcontrib.katex",
+    "sphinx_proof"
 ]
 
 myst_enable_extensions = [

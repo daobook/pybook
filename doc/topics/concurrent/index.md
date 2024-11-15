@@ -2,7 +2,10 @@
 
 ```{toctree}
 async-task
-futures
+awaitable
+coroutine
+future
 task
+futures
 display-date
 ```
