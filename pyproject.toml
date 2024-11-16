@@ -86,6 +86,15 @@ doc = [
   "sphinxcontrib-katex",
   "ipympl",
   "sphinx-proof",
+  # MMLab
+  "mmcv",
+  "mmengine",
+  "terminaltables",
+  "pycocotools",
+  "shapely",
+  "albumentations",
+  "numba",
+  "timm",
 ]
 
 dev = [
