@@ -61,3 +61,8 @@ Python 中的设计模式和习惯用法的集合。
 停止更新。
 :::
 
+:::{card} ipycanvas
+:link: https://ipycanvas.readthedocs.io/en/latest/index.html
+
+Jupyter中的交互式画布
+:::
