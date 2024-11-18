@@ -54,7 +54,6 @@ extensions = [
     # for pretty schema
     # "sphinx-jsonschema",
     'sphinx.ext.mathjax',
-    # 'jupyterlite_sphinx',
     # "sphinxcontrib.katex",
     "sphinx_proof"
 ]
@@ -126,10 +125,6 @@ intersphinx_mapping = {
         "https://jupyter-contrib-nbextensions.readthedocs.io/en/latest",
         None,
     ),
-    "jupyterlite": (
-        "https://jupyterlite.readthedocs.io/en/stable",
-        None,
-    ),
     "nbsphinx": ("https://nbsphinx.readthedocs.io", None),
     "spack": ("https://spack-tutorial.readthedocs.io/en/latest", None),
     "ipyparallel": ("https://ipyparallel.readthedocs.io/en/latest", None),
@@ -176,10 +171,6 @@ suppress_warnings = [
     "myst.xref_missing", # 禁用 myst 警告
     "autoapi.python_import_resolution", "autoapi.not_readable" # 禁用 autoapi 警告
 ]
-# jupyterlite_dir = ROOT/"tools/lite/apps"
-jupyterlite_contents = "../tests"
-jupyterlite_bind_ipynb_suffix = False
-jupyterlite_config = "jupyterlite_config.json"
 
 # -- Options for HTML output -------------------------------------------------
 

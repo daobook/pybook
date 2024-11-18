@@ -11,6 +11,7 @@ matplotlib/index
 TVM <https://xinetzone.github.io/tvm-book/>
 PyTorch <https://xinetzone.github.io/torch-book/>
 TensorFlow <https://xinetzone.github.io/tensorflow-book/>
+xbook <https://xinetzone.github.io/xbook/>
 tkinter/index
 qt/index
 gym/index
