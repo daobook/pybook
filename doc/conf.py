@@ -17,12 +17,32 @@ exclude_patterns = [
     "**/my_notebook.ipynb",
     
 ]
-execution_excludepatterns = ["**/my_notebook.ipynb", "multigrid", "gym", "tf",]
+# 参考 https://myst-nb.readthedocs.io/en/latest/computation/execute.html
+nb_execution_mode = "auto" # "off", "auto", "force", "cache", "inline"
+nb_execution_excludepatterns = [
+    "libs/matplotlib/explain/**", "libs/matplotlib/events/**",
+    "libs/matplotlib/gui/**", "topics/concurrent/task/**"
+]
+nb_execution_excludepatterns.extend([ 
+    f"libs/{name}/*.ipynb"
+    for name in ["multigrid", "gym", "tf", "cffi", "cppyy", "tkinter", "drlhp"]
+])
+nb_execution_excludepatterns.extend([ 
+    f"libs/{name}/**/*.ipynb"
+    for name in ["multigrid", "gym", "tf", "cffi", "cppyy", "tkinter", "drlhp"]
+])
+nb_execution_excludepatterns.extend([ 
+    f"libs/{name}/**/**/*.ipynb"
+    for name in ["multigrid", "gym", "tf", "cffi", "cppyy", "tkinter", "drlhp"]
+])
+nb_execution_excludepatterns.extend([ 
+    f"libs/{name}/**/**/**/*.ipynb"
+    for name in ["multigrid", "gym", "tf", "cffi", "cppyy", "tkinter", "drlhp",]
+])
 # 如果你希望stderr和stdout中的每个输出都被合并成一个流，请使用以下配置。
 # 避免将 jupter 执行报错的信息输出到 cmd
 nb_merge_streams = True
 nb_execution_allow_errors = True
-nb_execution_mode = "cache" # "cache", "off"
 # nbsphinx_assume_equations = False
 
 logger = logging.getLogger(project)
