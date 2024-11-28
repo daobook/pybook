@@ -114,6 +114,8 @@ dev = [
   "absl-py",
   "ping3",
   "paramiko",
+  "prefect",
+  "controlflow",
 ]
 
 gui = [

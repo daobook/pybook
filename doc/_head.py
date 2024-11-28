@@ -220,10 +220,10 @@ html_theme_options = {
     # "use_repository_button": True,  # 默认 `False`
     # -- 包含从 Jupyter 笔记本建立页面的 Binder 启动按钮。 ---------------------
     # "launch_buttons": '', # 默认 `False`
-    "home_page_in_toc": False,  # 是否将主页放在导航栏（顶部）
+    # "home_page_in_toc": False,  # 是否将主页放在导航栏（顶部）
     # -- 只显示标识，不显示 `html_title`，如果它存在的话。-----
     # -- 在导航栏中显示子目录，向下到这里列出的深度。 ----
-    # "show_navbar_depth": 2,
+    # "show_navbar_depth": 7,
     # -- 在侧边栏页脚添加额外的 HTML -------------------
     # （如果 `sbt-sidebar-footer.html `在 `html_sidebars` 中被使用）。
     # "extra_navbar": extra_navbar,
@@ -300,7 +300,7 @@ html_theme_options = {
     ],
     "footer_start": ["version-switcher", "copyright"],
     "footer_end": ["sphinx-version", "last-updated"],
-    "navigation_with_keys": True
+    # "navigation_with_keys": True
 }
 # -- 自定义网站的标志 --------------
 html_logo = 'logo.jpg'

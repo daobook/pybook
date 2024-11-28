@@ -7,6 +7,7 @@
 :hidden:
 
 pythonx/index
+tasks/index
 libs/index
 jupyter/index
 compiler

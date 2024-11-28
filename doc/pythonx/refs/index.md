@@ -1,8 +1,6 @@
 # Python 参考手册
 
 ```{toctree}
-:maxdepth: 2
-
 constants
 terms
 glossary/index

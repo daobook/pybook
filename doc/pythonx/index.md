@@ -7,7 +7,6 @@ Python 官方文档提供了中文版本，可以阅读 [原版](https://docs.py
 ```
 
 ```{toctree}
-:maxdepth: 2
 :hidden:
 
 basic/index

@@ -8,8 +8,6 @@
 本章的内容不用关注细节，对概念有个大体的认知即可。
 
 ```{toctree}
-:maxdepth: 2
-
 understand-python
 basic-type
 ```

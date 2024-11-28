@@ -1,8 +1,6 @@
 # 用法
 
 ```{toctree}
-:maxdepth: 3
-
 project
 venv
 pep582

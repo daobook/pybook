@@ -18,7 +18,7 @@ exclude_patterns = [
     
 ]
 # 参考 https://myst-nb.readthedocs.io/en/latest/computation/execute.html
-nb_execution_mode = "auto" # "off", "auto", "force", "cache", "inline"
+nb_execution_mode = "off" # "off", "auto", "force", "cache", "inline"
 nb_execution_excludepatterns = [
     "libs/matplotlib/explain/**", "libs/matplotlib/events/**",
     "libs/matplotlib/gui/**", "topics/concurrent/task/**"
