@@ -10,7 +10,7 @@ Other advantages of work pools:
 
 - Configure default infrastructure configurations on your work pools that all jobs inherit and can override.
 - Allow platform teams to use work pools to expose opinionated (and enforced) interfaces to the infrastructure that they oversee.
-- Allow work pools to prioritize (or limit) flow runs through the use of [work queues](/v3/deploy/infrastructure-concepts/work-pools/#work-queues).
+- Allow work pools to prioritize (or limit) flow runs through the use of [work queues](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/#work-queues).
 
 <Tip>
     **Choosing Between `flow.deploy()` and `flow.serve()`**
@@ -24,8 +24,8 @@ Other advantages of work pools:
 Work pools have different operational modes, each designed to work with specific infrastructures and work delivery methods:
 
 1. Pull work pools: These require workers to actively poll for flow runs to execute.
-2. [Push work pools](/v3/deploy/infrastructure-examples/serverless): These submit runs directly to serverless infrastructure providers.
-3. [Managed work pools](/v3/deploy/infrastructure-examples/managed): These are administered by Prefect and handle both submission and execution of code.
+2. [Push work pools](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless): These submit runs directly to serverless infrastructure providers.
+3. [Managed work pools](https://docs.prefect.io/v3/deploy/infrastructure-examples/managed): These are administered by Prefect and handle both submission and execution of code.
 
 Each type of work pool is optimized for different use cases, allowing you to choose the best fit for your specific infrastructure and workflow requirements. 
 By using work pools, you can efficiently manage the distribution and execution of your Prefect flows across environments and infrastructures.
@@ -86,12 +86,12 @@ You can configure work pools by using any of the following:
 
 - Prefect UI
 - Prefect CLI commands
-- [Prefect REST API](/v3/api-ref/rest-api/)
+- [Prefect REST API](https://docs.prefect.io/v3/api-ref/rest-api/)
 - [Terraform provider for Prefect Cloud](https://registry.terraform.io/providers/PrefectHQ/prefect/latest/docs/resources/work_pool)
 
 To manage work pools in the UI, click the **Work Pools** icon. This displays a list of currently configured work pools.
 
-![The UI displays a list of configured work pools](/v3/img/ui/work-pool-list.png)
+![The UI displays a list of configured work pools](https://docs.prefect.io/v3/img/ui/work-pool-list.png)
 
 Select the **+** button to create a new work pool. You can specify the details about infrastructure created for this work pool.
 
@@ -375,7 +375,7 @@ Each work pool type is configured with a default base job template, which is a g
 The default base template defines values that pass to every flow run, but you can override them on a per-deployment or per-flow run basis.
 
 For example, these configuration options are available in the Prefect UI for `process` work pool:
-![process work pool configuration options](/v3/img/ui/process-work-pool-config.png)
+![process work pool configuration options](https://docs.prefect.io/v3/img/ui/process-work-pool-config.png)
 
 The default base job template allows you to:
 - set environment variables for spawned processes 
@@ -404,7 +404,7 @@ deployments:
         stream_output: false
 ```
 
-Learn more about [customizing job variables](/v3/deploy/infrastructure-concepts/customize).
+Learn more about [customizing job variables](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize).
 
 <Tip>
 **Advanced customization of the base job template**
@@ -418,7 +418,7 @@ Learn more about [customizing job variables](/v3/deploy/infrastructure-concepts/
     capabilities in secure environments. For example, the `kubernetes` worker type allows users to specify a custom job template  
     to configure the manifest that workers use to create jobs for flow execution.
 
-    See more information about [overriding a work pool's job variables](/v3/deploy/infrastructure-concepts/customize).
+    See more information about [overriding a work pool's job variables](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize).
 </Tip>
 
 ### Work queues
@@ -473,10 +473,10 @@ in waterfall fashion.
 
 ## Next steps 
 
-- Learn more about [workers](/v3/deploy/infrastructure-concepts/workers) and how they interact with work pools
-- Learn how to [deploy flows](/v3/deploy/infrastructure-concepts/prefect-yaml) that run in work pools
+- Learn more about [workers](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers) and how they interact with work pools
+- Learn how to [deploy flows](https://docs.prefect.io/v3/deploy/infrastructure-concepts/prefect-yaml) that run in work pools
 - Learn how to set up work pools for:
-  - [Kubernetes](/v3/deploy/infrastructure-examples/kubernetes)
-  - [Docker](/v3/deploy/infrastructure-examples/docker)
-  - [Serverless platforms](/v3/deploy/infrastructure-examples/serverless)
-  - [Infrastructure managed by Prefect Cloud](/v3/deploy/infrastructure-examples/managed)
+  - [Kubernetes](https://docs.prefect.io/v3/deploy/infrastructure-examples/kubernetes)
+  - [Docker](https://docs.prefect.io/v3/deploy/infrastructure-examples/docker)
+  - [Serverless platforms](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless)
+  - [Infrastructure managed by Prefect Cloud](https://docs.prefect.io/v3/deploy/infrastructure-examples/managed)

@@ -1,92 +1,60 @@
-# Cancel flow runs
+# 取消流程运行
+
+你可以从命令行界面（CLI）、用户界面（UI）、REST API或Python客户端取消计划中或正在进行的流程运行。
+
+当请求取消时，流程运行会进入“正在取消”状态。如果部署是基于工作池的部署且有一个工作器，那么工作器会监控流程运行的状态并检测到有取消请求。然后，工作器向流程运行基础设施发送一个信号，请求终止运行。如果在宽限期后（默认30秒）运行仍未终止，则基础设施将被终止，确保流程运行退出。
+
+```{admonition} **需要部署**
+:class: warning
+
+流程运行取消要求流程运行与部署相关联。必须运行监控过程以执行取消操作。
+
+内嵌的嵌套流程运行（那些没有使用`run_deployment`创建的），不能在不取消父流程运行的情况下被取消。为了独立于其父流程运行取消一个嵌套流程运行，我们建议将其单独部署并使用[run_deployment](https://docs.prefect.io/v3/deploy/index)函数启动它。
+```
+
+取消操作对Prefect工作器的重启具有弹性。
+为了实现这一点，我们将关于创建的基础设施的元数据附加到流程运行上。
+在内部，这被称为`infrastructure_pid`或基础设施标识符。
+通常，它由两部分组成：
+
+- 范围：确定基础设施运行的位置。
+- ID：在范围内为基础设施的唯一标识符。
 
 
-You can cancel a scheduled or in-progress flow run from the CLI, UI, REST API, or Python client.
+这个范围确保了Prefect不会错误地终止不相关的基础设施。
+例如，运行在多台机器上的工人可能会有重叠的进程ID，但它们的范围不应该相同。
 
-{/*
-<!-- vale off -->
-*/}
+基础设施类型的标识符包括：
 
-When requesting cancellation, the flow run moves to a "Cancelling" state.
-If the deployment is a work pool-based deployment with a worker, then the worker monitors 
-the state of flow runs and detects that cancellation is requested.
-The worker then sends a signal to the flow run infrastructure, requesting termination of the run.
-If the run does not terminate after a grace period (default of 30 seconds), the infrastructure is killed, ensuring the flow run exits.
+- 进程：机器主机名和PID。
+- Docker容器：Docker API URL和容器ID。
+- Kubernetes任务：Kubernetes集群名称和任务名称。
 
+虽然取消过程是健壮的，但仍有一些可能的问题：
 
-{/*
-<!-- vale on -->
-*/}
+- 如果流程运行的基础设施不支持取消操作，则取消将无法进行。
+- 如果尝试取消流程运行时，标识符的范围不匹配，工人无法取消流程运行。另一个工人可能会尝试取消。
+- 如果与运行相关的基础设施找不到或已被终止，工人会将流程运行标记为已取消。
+- 如果缺少`infrastructure_pid`，流程运行将被标记为已取消，但不能强制执行取消。
+- 如果工人在取消过程中遇到意外错误，根据错误发生的位置，流程运行可能被取消也可能不被取消。工人将再次尝试取消流程运行。另一个工人可能会尝试取消。
 
-<Warning>
-**A deployment is required**
+### 通过命令行接口（CLI）取消流程运行
 
-Flow run cancellation requires that the flow run is associated with a deployment.
-A monitoring process must be running to enforce the cancellation.
-
-Inline nested flow runs (those created without `run_deployment`), cannot be cancelled without cancelling the parent flow run.
-To cancel a nested flow run independent of its parent flow run, we recommend deploying it separately 
-and starting it using the [run_deployment](/v3/deploy/index) 
-function.
-</Warning>
-
-Cancellation is resilient to restarts of Prefect workers.
-To enable this, we attach metadata about the created infrastructure to the flow run.
-Internally, this is referred to as the `infrastructure_pid` or infrastructure identifier.
-Generally, this is composed of two parts:
-
-- Scope: identifying where the infrastructure is running.
-- ID: a unique identifier for the infrastructure within the scope.
-
-{/*
-<!-- vale off -->
-*/}
-
-The scope ensures that Prefect does not kill the wrong infrastructure.
-For example, workers running on multiple machines may have overlapping process IDs but should not have a matching scope.
-
-{/*
-<!-- vale on -->
-*/}
-
-The identifiers for infrastructure types are:
-
-- Processes: The machine hostname and the PID.
-- Docker Containers: The Docker API URL and container ID.
-- Kubernetes Jobs: The Kubernetes cluster name and the job name.
-
-While the cancellation process is robust, there are a few issues than can occur:
-
-- If the infrastructure for the flow run does not support cancellation, cancellation will not work.
-- If the identifier scope does not match when attempting to cancel a flow run, the worker cannot cancel the flow run. 
-Another worker may attempt cancellation.
-- If the infrastructure associated with the run cannot be found or has already been killed, the worker marks the flow run as cancelled.
-- If the `infrastructre_pid` is missing, the flow run is marked as cancelled but cancellation cannot be enforced.
-- If the worker runs into an unexpected error during cancellation, the flow run may or may not be cancelled 
-depending on where the error occurred. The worker will try again to cancel the flow run. Another worker may attempt cancellation.
-
-### Cancel through the CLI
-
-From the command line in your execution environment, you can cancel a flow run by using the 
-`prefect flow-run cancel` CLI command, passing the ID of the flow run.
+在您的执行环境中，可以通过使用 `prefect flow-run cancel` CLI命令并传递流程运行的ID来取消一个流程运行。
 
 ```bash
 prefect flow-run cancel 'a55a4804-9e3c-4042-8b59-b3b6b7618736'
 ```
 
-### Cancel through the UI
+### 通过用户界面（UI）取消
 
-Navigate to the flow run's detail page and click `Cancel` in the upper right corner.
+导航到流程运行的详细页面，并在右上角点击“取消”按钮。
 
-![Prefect UI](/v3/img/ui/flow-run-cancellation-ui.png)
+## 超时设置
 
-## Timeouts
+流程超时设置用于防止意外的长时运行流程。当流程的执行时间超过了设定的超时时间时，会触发一个超时异常，并且该流程会被标记为失败。在用户界面上，流程会被明显地标记为“超时”。
 
-Flow timeouts prevent unintentional long-running flows. When the duration of execution for a flow 
-exceeds the duration specified in the timeout, a timeout exception is raised and the flow is marked as failed. 
-In the UI, the flow is visibly designated as `TimedOut`.
-
-Timeout durations are specified using the `timeout_seconds` keyword argument.
+超时持续时间是通过 `timeout_seconds` 关键字参数来指定的。
 
 ```python
 from prefect import flow

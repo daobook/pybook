@@ -170,7 +170,7 @@ scheduled start time.
 
 ### Polling for work
 
-Workers poll for work every 15 seconds by default. You can configure this interval in your [profile settings](/v3/develop/settings-and-profiles/) 
+Workers poll for work every 15 seconds by default. You can configure this interval in your [profile settings](https://docs.prefect.io/v3/develop/settings-and-profiles/) 
 with the
 `PREFECT_WORKER_QUERY_SECONDS` setting.
 
@@ -189,9 +189,9 @@ If `prefect worker start` is run non-interactively, the `prompt` install policy 
 
 ### Additional resources
 
-See how to [daemonize a Prefect worker](/v3/deploy/daemonize-processes/).
+See how to [daemonize a Prefect worker](https://docs.prefect.io/v3/deploy/daemonize-processes/).
 
-See more information on [overriding a work pool's job variables](/v3/deploy/infrastructure-concepts/customize).
+See more information on [overriding a work pool's job variables](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize).
 
 
 ---------

@@ -1,54 +1,51 @@
-# Schedule flow runs
+# 调度流程运行
 
-Prefect allows you to specify schedules on which your flows run.
-You can add one or more schedules to any [served or deployed](/v3/deploy/run-flows-in-local-processes) flow.
-Schedules tell Prefect when and how to create new flow runs.
-You can add a schedule to a deployed flow in the Prefect UI, in the CLI through the `prefect deployment schedule` command, or the `prefect.yaml` configuration file.
+Prefect允许你指定流程的运行调度。
+你可以为任何[已服务或已部署的流程](https://docs.prefect.io/v3/deploy/run-flows-in-local-processes)添加一个或多个调度。
+调度告诉 Prefect 何时以及如何创建新的流程运行。
+你可以在 Prefect UI 中、通过 CLI 使用 `prefect deployment schedule` 命令，或者在 `prefect.yaml` 配置文件中给已部署的流程添加调度。
 
-## Create schedules
+## 创建时间表
 
-There are several ways to create a schedule for a deployment:
+有几种方式可以为部署创建时间表：
 
-- Through the Prefect UI
-- With the `cron`, `interval`, or `rrule` parameters if building your deployment with the
-[`serve` method](/v3/develop/write-flows/#serving-a-flow) of the `Flow` object or
-[the `serve` utility](/v3/develop/write-flows/#serving-multiple-flows-at-once) for managing multiple flows simultaneously
-- If using [worker-based deployments](/v3/deploy/infrastructure-concepts/workers/)
-  - When you define a deployment with `flow.serve` or `flow.deploy`
-  - Through the interactive `prefect deploy` command
-  - With the `deployments` -> `schedules` section of the `prefect.yaml` file
+- 通过 Prefect UI
+- 如果使用 [`serve` 方法](https://docs.prefect.io/v3/develop/write-flows#serving-a-flow)构建部署，则可以通过 `cron`、`interval` 或 `rrule` 参数来创建 `Flow` 对象或[`serve`工具](https://docs.prefect.io/v3/develop/write-flows#serving-multiple-flows-at-once)以同时管理多个流程
+- 如果使用基于[工作者的部署](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers)
+  - 当你用 `flow.serve` 或 `flow.deploy` 定义部署时
+  - 通过交互式 `prefect deploy`命令
+  - 在 `prefect.yaml` 文件的 `deployments` -> `schedules`部分
 
-### Create schedules in the UI
+### 在 UI 中创建调度
 
-You can add schedules in the **Schedules** section of a **Deployment** page in the UI.
-To add a schedule select the **+ Schedule** button.
-Choose **Interval** or **Cron** to create a schedule.
+你可以在UI中的**部署**页面的**调度**部分添加调度。
+要添加时间表，请选择 **+ Schedule** 按钮。
+选择 **间隔** 或 **Cron** 来创建调度。
 
-<Note>
-**What about RRule?**
-The UI does not support creating RRule schedules.
-However, the UI will display RRule schedules that you've created through the command line.
-</Note>
+```{admonition} 关于RRule？
+:class: tip
+UI不支持创建RRule时间表。
+然而，UI将显示你通过命令行创建的RRule时间表。
+```
 
-The new schedule appears on the **Deployment** page where you created it.
-New scheduled flow runs are visible in the **Upcoming** tab of the **Deployment** page.
+新创建的时间表将出现在你创建它的**部署**页面上。
+新的计划流程运行可以在**部署**页面的**即将到来**选项卡中看到。
 
-To edit an existing schedule, select **Edit** from the three-dot menu next to a schedule on a **Deployment** page.
+要编辑现有时间表，请从**部署**页面上的时间表旁边的三点菜单中选择**编辑**。
 
-### Create schedules in Python
+### 使用 Python 创建调度
 
-Specify the schedule when you create a deployment in a Python file with `flow.serve()`, `serve`, `flow.deploy()`, or `deploy`.
-Just add the keyword argument `cron`, `interval`, or `rrule`.
+在 Python 文件中，通过 `flow.serve()`、`serve`、`flow.deploy()` 或 `deploy` 创建部署时，可以指定调度。只需添加关键字参数 `cron`、`interval` 或 `rrule` 即可。
 
-| Argument    | Description                                                                                                                                                                                                                                           |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `interval`  | An interval on which to execute the deployment. Accepts a number or a timedelta object to create a single schedule. If a number is given, it is interpreted as seconds. Also accepts an iterable of numbers or timedelta to create multiple schedules.|
-| `cron`      | A cron schedule string of when to execute runs of this deployment. Also accepts an iterable of cron schedule strings to create multiple schedules.                                                                                                    |
-| `rrule`     | An rrule schedule string of when to execute runs of this deployment. Also accepts an iterable of rrule schedule strings to create multiple schedules.                                                                                                 |
-| `schedules` | A list of schedule objects defining when to execute runs of this deployment. Used to define multiple schedules or additional scheduling options such as `timezone`.                                                                                   |
-| `schedule`  | A schedule object defining when to execute runs of this deployment. Used to define additional scheduling options such as `timezone`.                                                                                                                     |
+| 参数       | 描述                                                                                                                                                                                                                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `interval` | 执行部署的时间间隔。接受一个数字或timedelta对象来创建一个单一计划。如果给定一个数字，则解释为秒。也接受一个数字或timedelta的可迭代对象来创建多个计划。                                                                                               |
+| `cron`     | 一个cron计划字符串，用于指定何时运行此部署的运行。还接受一个cron计划字符串的可迭代对象来创建多个计划。                                                                                                                                                  |
+| `rrule`    | 一个rrule计划字符串，用于指定何时运行此部署的运行。还接受一个rrule计划字符串的可迭代对象来创建多个计划。                                                                                                                                           |
+| `schedules`| 定义何时运行此部署的计划对象列表。用于定义多个计划或额外的调度选项，如`timezone`。                                                                                                                                                                  |
+| `schedule` | 定义何时运行此部署的计划对象。用于定义额外的调度选项，如`timezone`。                                                                                                                                                                           |
 
-The `serve` method below will create a deployment of `my_flow` with a cron schedule that creates runs every minute of every day:
+下面 `serve` 方法将创建名为 `my_flow` 的部署，并使用 cron 计划每分钟创建一次运行：
 
 ```python
 from prefect import flow
@@ -58,9 +55,9 @@ from myproject.flows import my_flow
 my_flow.serve(name="flowing", cron="* * * * *")
 ```
 
-If using work pool-based deployments, the `deploy` method has the same schedule-based parameters.
+如果采用基于工作池的部署方式，`deploy` 方法具有相同的基于调度的参数。
 
-When `my_flow` is served with this interval schedule, it will run every 10 minutes beginning at midnight on January, 1, 2026 in the `America/Chicago` timezone:
+当 `my_flow` 按照此 interval 调度运行时，它将从 2026 年 1 月 1 日午夜开始，在 `America/Chicago` 时区每10分钟运行一次。
 
 ```python
 from datetime import timedelta, datetime
@@ -80,14 +77,14 @@ my_flow.serve(
 )
 ```
 
-### Create schedules in the terminal
+### 在终端中创建调度
 
-You can create a schedule through the interactive `prefect deploy` command. You will be prompted to choose which type of schedule to create.
+您可以通过交互式的 `prefect deploy` 命令来创建调度。系统会提示您选择要创建的调度类型。
 
-### Create schedules in YAML
+### 在 YAML 中创建调度
 
-If you save the `prefect.yaml` file from the `prefect deploy` command, you will see it has a `schedules` section for your deployment.
-Alternatively, you can create a `prefect.yaml` file from a recipe or from scratch and add a `schedules` section to it.
+如果你保存了 `prefect deploy` 命令生成的 `prefect.yaml` 文件，你会发现它包含用于部署的 `schedules` 部分。
+或者，你也可以根据配方或从头开始创建 `prefect.yaml` 文件，并向其中添加 `schedules` 部分。
 
 ```yaml
 deployments:
@@ -104,88 +101,80 @@ deployments:
       active: true
 ```
 
-## Schedule types
+## 调度类型
 
-Prefect supports three types of schedules:
+Prefect 支持三种类型的调度：
 
-- [`Cron`](#cron) is most appropriate for users who are already familiar with `cron` from previous use.
-- [`Interval`](#interval) is best suited for deployments that run at some consistent cadence that isn't related to absolute time.
-- [`RRule`](#rrule) is best suited for deployments that rely on calendar logic for simple recurring schedules, irregular intervals, exclusions,
-or day-of-month adjustments.
+- 对于已经熟悉 `cron` 的用户来说，[`Cron`](#cron)是最为合适的。
+- [`Interval`](#interval)最适合那些以某种一致的节奏运行的部署，这种节奏与绝对时间无关。
+- [`RRule`](#rrule)最适合依赖日历逻辑的部署，它适用于简单的循环计划、不规则间隔、排除项或月中某日调整。
 
-<Tip>
-**Schedules can be inactive**
+```{admonition} 调度可处于非激活状态
+:class: tip
 
-When you create or edit a schedule, you can set the `active` property to `False` in Python (or `false` in a YAML file) to
-deactivate the schedule.
-This is useful to keep the schedule configuration but temporarily stop the schedule from creating new flow runs.
-</Tip>
+当您创建或编辑计划时，可以在 Python 中将 `active` 属性设置为 `False`（或者在 YAML 文件中设置为 `false`），以停用该调度。
+这一功能有助于保留调度配置，同时临时阻止调度生成新的流程运行。
+```
 
+(cron)=
 ### Cron
 
-You can specify a schedule with a [`cron`](https://en.wikipedia.org/wiki/Cron) pattern.
-You may also provide a timezone to enforce daylight saving time (DST) behaviors.
+你可以使用[`cron`](https://en.wikipedia.org/wiki/Cron)模式来指定调度。你还可以提供时区，以执行夏令时（DST）的行为。
 
-Prefect uses [`croniter`](https://github.com/kiorky/croniter) to specify datetime iteration with a `cron`-like format.
+Prefect 使用 [`croniter`](https://github.com/kiorky/croniter) 来指定具有类似 `cron` 格式的日期时间迭代。
 
-<Tip>
-**Supported `croniter` features**
+```{admonition} 支持的 croniter 功能
+:class: tip
 
-While Prefect supports most features of `croniter` for creating `cron`-like schedules, it does not support "R"
-random or "H" hashed keyword expressions or the schedule jittering possible with those expressions.
-</Tip>
+虽然Prefect支持大多数 `croniter` 功能来创建类似 `cron` 的调度，但它不支持 "R" 随机或 "H" 哈希关键词表达式，或者那些表达式可能实现的时间表抖动。
+```
 
-`Cron` properties include:
+`cron` 属性包括：
 
-| Property | Description                                                                                                            |
-| -------- | ---------------------------------------------------------------------------------------------------------------------- |
-| cron     | A valid `cron` string. (Required)                                                                                      |
-| day_or   | Boolean indicating how `croniter` handles `day` and `day_of_week` entries. Default is `True`.                          |
-| timezone | String name of a time zone. (See the [IANA Time Zone Database](https://www.iana.org/time-zones) for valid time zones.) |
+| 属性         | 描述                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| cron         | 有效的 `cron` 字符串。（必需的）                                                                                    |
+| day_or       | 布尔值，指示 `croniter` 如何处理 `day` 和 `day_of_week` 条目。默认值为 `True`。                                        |
+| timezone     | 时区的字符串名称。（查看[IANA时区数据库](https://www.iana.org/time-zones)以获取有效时区。）                     |
 
-#### How the `day_or` property works
+#### `day_or` 属性的工作原理
 
-The `day_or` property defaults to `True`, matching the behavior of `cron`.
+`day_or` 属性默认为 `True`，与 `cron` 的行为一致。
 
-In this mode, if you specify a `day` (of the month)
-entry and a `day_of_week` entry, the schedule runs a flow on both the specified day of the month *and* on the specified day of the
-week.
+在此模式下，如果您指定了一个月中的某一天（`day`）和一周中的某一天（`day_of_week`），则计划将在指定的月日和周日均执行一次流程。
 
-The "or" in `day_or` refers to the two entries treated like an `OR` statement. The schedule should include
-both, as in the SQL statement:
+`day_or` 中的 `"or"` 指的是这两个条目被视为逻辑 "OR" 语句。计划应包括两者，就像 SQL 语句中的那样：
 
 ```sql
 SELECT * FROM employees WHERE first_name = 'Ford' OR last_name = 'Prefect';
 ```
 
-For example, with `day_or` set to `True`, the cron schedule `* * 3 1 2` runs a flow every minute on the third day of the month
-and on Tuesday (the second day of the week) in January (the first month of the year).
+例如，当 `day_or` 设置为 `True` 时，cron 计划表达式 `* * 3 1 2` 将在每月的第三天以及每年一月（即一年的第一个月）的星期二（一周中的第二天）每分钟执行一次流程。
 
-With `day_or` set to `False`, the `day` (of the month) and `day_of_week` entries are joined with the more restrictive `AND`
-operation, as in the SQL statement:
+当 `day_or` 设置为 `False` 时，“日”（指月份中的日期）和 “星期几” 的条目会通过更为严格的 `AND` 逻辑操作符连接起来，正如 SQL 语句中所示：
 
 ```sql
 SELECT * from employees WHERE first_name = 'Zaphod' AND last_name = 'Beeblebrox';
 ```
 
-For example, the same schedule, when `day_or` is `False`, runs a flow on every minute on the **third Tuesday** in January.
-This behavior matches `fcron` instead of `cron`.
+例如，当`day_or`设置为`False`时，相同的计划表将在1月的**第三个星期二**每分钟运行一次。
+这种行为与`fcron`相符，而非`cron`。
 
-<Note>
-**Daylight saving time considerations**
+```{admonition} 夏令时考虑事项
+:class: note
 
-If the `timezone` is a DST-observing one, then the schedule adjusts itself appropriately.
+如果`timezone`遵守夏令时，那么计划表会相应地进行调整。
 
-The `cron` rules for DST are based on schedule times, not intervals. This means that an hourly `cron` schedule fires on
-every new schedule hour, not every elapsed hour.
-For example, when clocks are set back, this results in a two-hour pause as the schedule will fire _the first time_ 1 AM is reached and _the first time_ 2 AM is reached, 120 minutes later.
+夏令时的`cron`规则基于计划时间而非间隔。这意味着每小时的`cron`计划会在每个新的计划小时触发一次，而不是每过一个小时触发一次。
+例如，当时钟向后调一小时时，这将导致计划出现两小时的暂停，因为计划将在第一次到达凌晨1点和120分钟后的凌晨2点各触发一次。
 
-Longer schedules, such as one that fires at 9 AM every morning, adjust for DST automatically.
-</Note>
+更长的计划，例如每天早上9点触发的计划，会自动调整以适应夏令时。
+```
 
+(interval)=
 ### Interval
 
-An `Interval` schedule creates new flow runs on a regular interval measured in seconds. Intervals are computed using an optional `anchor_date`.
+`Interval` 调度器会以秒为单位定期创建新的流程运行。这些间隔是根据可选的 `anchor_date` 来计算的。
 
 ```yaml
 schedule:
@@ -193,92 +182,85 @@ schedule:
   timezone: America/Chicago
 ```
 
-`Interval` properties include:
+`Interval` 属性包括：
 
-| Property    | Description                                                                                                                                                                        |
+| 属性        | 描述                                                                                                                                                                               |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| interval    | `datetime.timedelta` indicating the time between flow runs. (Required)                                                                                                             |
-| anchor_date | `datetime.datetime` indicating the starting or "anchor" date to begin the schedule. If no `anchor_date` is supplied, the current UTC time is used.                                 |
-| timezone    | String name of a time zone, used to enforce localization behaviors like DST boundaries. (See the [IANA Time Zone Database](https://www.iana.org/time-zones) for valid time zones.) |
+| interval    | 表示流运行之间时间的 `datetime.timedelta`。（必填）                                                                                                                                |
+| anchor_date | 表示开始或“锚点”日期以开始计划的 `datetime.datetime`。如果没有提供 `anchor_date`，则使用当前的 UTC 时间。                                                                          |
+| timezone    | 时区的字符串名称，用于强制执行本地化行为，如夏令时边界。（有关有效时区，请参阅 [IANA 时区数据库](https://www.iana.org/time-zones)。）                                              |
 
-The `anchor_date` does not indicate a "start time" for the schedule, but a fixed point to
-compute intervals.
-If the anchor date is in the future, then schedule dates are computed by subtracting the `interval` from it.
-In this example, you import the [Pendulum](https://pendulum.eustace.io/) Python package for easy datetime manipulation.
-Pendulum isn't required, but it's a useful tool for specifying dates.
+`anchor_date` 并不表示计划的“开始时间”，而是用于计算间隔的固定点。
+如果锚点日期在未来，则计划日期通过从锚点日期减去 `interval` 来计算。
+在这个示例中，您导入了 [Pendulum](https://pendulum.eustace.io/) Python 包，以便于日期时间操作。
+Pendulum 不是必需的，但它是一个指定日期的有用工具。
 
-<Note>
-**Daylight saving time considerations**
+```{admonition} 夏令时注意事项
+:class: note 
 
-If the schedule's `anchor_date` or `timezone` are provided with a DST-observing timezone, then the schedule adjusts itself
-appropriately.
-Intervals greater than 24 hours will follow DST conventions, while intervals of less than 24 hours will follow UTC intervals.
+如果计划的 `anchor_date` 或 `timezone` 提供了遵循夏令时的时区，则计划会自行适当调整。
+大于 24 小时的间隔将遵循夏令时惯例，而小于 24 小时的间隔将遵循 UTC 间隔。
 
-For example, an hourly schedule will fire every UTC hour, even across DST boundaries. When clocks are set back, this results in two runs that _appear_ to be scheduled for 1 AM local time, even though they are an hour apart in UTC time.
+例如，每小时计划将在每个 UTC 小时触发，即使在夏令时边界也是如此。当时间被拨回时，这会导致两次运行 _看起来_ 被安排在本地时间的 1 点，尽管它们在 UTC 时间上相差一小时。
 
-For longer intervals, like a daily schedule, the interval schedule adjusts for DST boundaries so that the clock-hour remains constant.
-This means that a daily schedule that always fires at 9 AM will observe DST and continue to fire at 9 AM in the local time zone.
-</Note>
+对于较长的间隔，如每日计划，间隔计划会调整夏令时边界，以便时钟小时保持不变。
+这意味着一个总是在上午 9 点触发的每日计划将遵循夏令时，并在本地时区继续在上午 9 点触发。
+```
 
+(rrule)=
 ### RRule
 
-An `RRule` scheduling supports [iCal recurrence rules](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)
-(RRules), which provide convenient syntax for creating repetitive schedules. Schedules can repeat on a frequency from
-yearly down to every minute.
+`RRule` 调度支持 [iCal 重复规则](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)（RRules），它提供了方便的语法来创建重复的计划。计划可以按频率从每年到每分钟重复。
 
-`RRule` uses the [dateutil rrule](https://dateutil.readthedocs.io/en/stable/rrule.html) module to specify iCal recurrence rules.
+`RRule` 使用 [dateutil rrule](https://dateutil.readthedocs.io/en/stable/rrule.html) 模块来指定 iCal 重复规则。
 
-RRules are appropriate for any kind of calendar-date manipulation, including simple repetition, irregular intervals, exclusions,
-week day or day-of-month adjustments, and more. RRules can represent complex logic like:
+RRules 适用于任何类型的日历日期操作，包括简单的重复、不规则的间隔、排除、工作日或每月的日期调整等。RRules 可以表示复杂的逻辑，例如：
 
-- The last weekday of each month
-- The fourth Thursday of November
-- Every other day of the week
+- 每个月的最后一个工作日
+- 11 月的第四个星期四
+- 每周的每隔一天
 
-`RRule` properties include:
+`RRule` 属性包括：
 
-| Property | Description                                                                                                                                                   |
+| 属性     | 描述                                                                                                                                                          |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| rrule    | String representation of an RRule schedule. See the [`rrulestr` examples](https://dateutil.readthedocs.io/en/stable/rrule.html#rrulestr-examples) for syntax. |
-| timezone | String name of a time zone. See the [IANA Time Zone Database](https://www.iana.org/time-zones) for valid time zones.                                          |
+| rrule    | RRule 计划的字符串表示。有关语法，请参阅 [`rrulestr` 示例](https://dateutil.readthedocs.io/en/stable/rrule.html#rrulestr-examples)。                             |
+| timezone | 时区的字符串名称。有关有效时区，请参阅 [IANA 时区数据库](https://www.iana.org/time-zones)。                                                                   |
 
-You may find it useful to use an RRule string generator such as the [iCalendar.org RRule Tool](https://icalendar.org/rrule-tool.html) to help create valid RRules.
+您可能会发现使用 RRule 字符串生成器（如 [iCalendar.org RRule 工具](https://icalendar.org/rrule-tool.html)）来帮助创建有效的 RRules 很有用。
 
 ```yaml
 schedule:
   rrule: 'FREQ=WEEKLY;BYDAY=MO,WE,FR;UNTIL=20240730T040000Z'
 ```
 
-<Note>
-**RRule restrictions**
-The max supported character length of an `rrulestr` is 6,500 characters
+```{admonition} RRule 限制
+:class: note
 
-`COUNT` is not supported. Please use `UNTIL` or the `/deployments/{id}/runs` endpoint to schedule a fixed number of
-flow runs.
-</Note>
+`rrulestr` 支持的最大字符长度为 6,500 个字符
 
-<Note>
-**Daylight saving time considerations**
+`COUNT` 不受支持。请使用 `UNTIL` 或 `/deployments/{id}/runs` 端点来安排固定数量的流运行。
+```
 
-As a calendar-oriented standard, `RRules` are sensitive to the initial timezone provided.
-A 9 AM daily schedule with a DST-aware start date maintains a local 9 AM time through DST boundaries. A 9 AM daily schedule
-with a UTC start date maintains a 9 AM UTC time.
-</Note>
+```{admonition} 夏令时注意事项
+:class: note
 
-## How scheduling works
+作为面向日历的标准，`RRules` 对初始时区很敏感。
+一个在夏令时感知开始日期下每天上午 9 点的计划，会在夏令时边界内保持本地时间上午 9 点。一个在 UTC 开始日期下每天上午 9 点的计划，会保持 UTC 时间上午 9 点。
+```
 
-Prefect's `Scheduler` service evaluates each deployment's schedules and creates new runs appropriately. It starts
-automatically when `prefect server start` is run and it is a built-in service of Prefect Cloud.
+## 调度的工作原理
 
-The `Scheduler` creates the fewest runs that satisfy the following constraints, in order:
+Prefect 的 `Scheduler` 服务会评估每个部署的计划，并适当地创建新的运行。它在运行 `prefect server start` 时自动启动，并且是 Prefect Cloud 的内置服务。
 
-- No more than 100 runs will be scheduled.
-- Runs will not be scheduled more than 100 days in the future.
-- At least three runs will be scheduled.
-- Runs will be scheduled until at least one hour in the future.
+`Scheduler` 会创建满足以下约束的最少运行次数，按顺序：
 
-These behaviors are adjustable through the relevant settings with the `prefect config
-view --show-defaults` command:
+- 最多安排 100 次运行。
+- 运行不会安排在超过 100 天后的未来。
+- 至少安排三次运行。
+- 运行将安排到至少一小时后的未来。
+
+这些行为可以通过 `prefect config view --show-defaults` 命令的相关设置进行调整：
 
 ```bash
 PREFECT_API_SERVICES_SCHEDULER_DEPLOYMENT_BATCH_SIZE='100'
@@ -291,19 +273,16 @@ PREFECT_API_SERVICES_SCHEDULER_MIN_SCHEDULED_TIME='1:00:00'
 PREFECT_API_SERVICES_SCHEDULER_MAX_SCHEDULED_TIME='100 days, 0:00:00'
 ```
 
-See the [Settings docs](/v3/develop/settings-and-profiles/) for more information on altering your settings.
+请参阅 [设置文档](https://docs.prefect.io/v3/develop/settings-and-profiles) 以获取有关更改设置的更多信息。
 
-These settings mean that if a deployment has an hourly schedule, the default settings will create runs for the next four days (or 100 hours).
-If it has a weekly schedule, the default settings will maintain the next 14 runs (up to 100 days in the future).
+这些设置意味着，如果部署有一个每小时的计划，默认设置将创建接下来四天（或 100 小时）的运行。如果它有一个每周的计划，默认设置将维持接下来的 14 次运行（最多 100 天后的未来）。
 
-<Tip>
-**`Scheduler` does not affect execution**
+```{admonition} Scheduler 不影响执行
+:class: tip
 
-The Prefect `Scheduler` service only creates new flow runs and places them in `Scheduled` states.
-It is not involved in flow or task execution.
-</Tip>
+Prefect 的 `Scheduler` 服务仅创建新的流运行并将它们置于 `Scheduled` 状态。它不参与流或任务的执行。
+```
 
-If you change a schedule, previously scheduled flow runs that have not started are removed, and new scheduled flow runs are
-created to reflect the new schedule.
+如果您更改了计划，之前安排的尚未开始的流运行将被删除，并创建新的安排流运行以反映新的计划。
 
-To remove all scheduled runs for a flow deployment, you can remove the schedule.
+要删除流部署的所有安排运行，您可以删除该计划。

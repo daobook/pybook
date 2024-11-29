@@ -28,13 +28,13 @@ Before deploying your flow using `flow.deploy`, ensure you have the following:
 
 1. A running Prefect server or Prefect Cloud workspace: You can either run a Prefect server locally or use a Prefect Cloud workspace. 
 To start a local server, run `prefect server start`. To use Prefect Cloud, sign up for an account at [app.prefect.cloud](https://app.prefect.cloud) 
-and follow the [Connect to Prefect Cloud](/v3/manage/cloud/connect-to-cloud/) guide.
+and follow the [Connect to Prefect Cloud](https://docs.prefect.io/v3/manage/cloud/connect-to-cloud/) guide.
 
 2. A Prefect flow: You should have a flow defined in your Python script. If you haven't created a flow yet, refer to the 
-[Write Flows](/v3/develop/write-flows/) guide.
+[Write Flows](https://docs.prefect.io/v3/develop/write-flows/) guide.
 
 3. A work pool: You need a work pool to manage the infrastructure for running your flow. If you haven't created a work pool, you can do so through 
-the Prefect UI or using the Prefect CLI. For more information, see the [Work Pools](/v3/deploy/infrastructure-concepts/work-pools/) guide. 
+the Prefect UI or using the Prefect CLI. For more information, see the [Work Pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/) guide. 
 
     For examples in this guide, we'll use a Docker work pool created by running:
     ```bash
@@ -251,7 +251,7 @@ To deploy a flow with a schedule, you can use one of the following options:
     ```
     </Expandable>
 
-    Learn more about schedules [here](/v3/automate/add-schedules).
+    Learn more about schedules [here](https://docs.prefect.io/v3/automate/add-schedules).
 
 
 ## Use remote code storage
@@ -298,7 +298,7 @@ The `source` parameter can accept a variety of remote storage options including:
 
 The `entrypoint` parameter is the path to the flow function within your repository combined with the name of the flow function.
 
-Learn more about remote code storage [here](/v3/deploy/infrastructure-concepts/store-flow-code/).
+Learn more about remote code storage [here](https://docs.prefect.io/v3/deploy/infrastructure-concepts/store-flow-code/).
 
 ## Set default parameters
 
@@ -356,7 +356,7 @@ if __name__ == "__main__":
 Job variables can be used to customize environment variables, resources limits, and other infrastructure options, allowing fine-grained control over your infrastructure on a per-deployment or per-flow-run basis.
 Any variable defined in the base job template of the associated work pool can be overridden by a job variable.
 
-You can learn more about job variables [here](/v3/deploy/infrastructure-concepts/customize).
+You can learn more about job variables [here](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize).
 
 ## Deploy multiple flows
 
@@ -399,8 +399,8 @@ This approach offers the following benefits:
 
 ## Additional resources
 
-- [Work Pools](/v3/deploy/infrastructure-concepts/work-pools/)
-- [Store Flow Code](/v3/deploy/infrastructure-concepts/store-flow-code/)
-- [Customize Infrastructure](/v3/deploy/infrastructure-concepts/customize/)
-- [Schedules](/v3/automate/add-schedules/)
-- [Write Flows](/v3/develop/write-flows/)
+- [Work Pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/)
+- [Store Flow Code](https://docs.prefect.io/v3/deploy/infrastructure-concepts/store-flow-code/)
+- [Customize Infrastructure](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize/)
+- [Schedules](https://docs.prefect.io/v3/automate/add-schedules/)
+- [Write Flows](https://docs.prefect.io/v3/develop/write-flows/)

@@ -9,7 +9,7 @@ Kubernetes 1.26.0 and newer minor versions.
 
 1. A Prefect Cloud account
 2. A cloud provider (AWS, GCP, or Azure) account
-3. Python and Prefect [installed](/v3/get-started/install/)
+3. Python and Prefect [installed](https://docs.prefect.io/v3/get-started/install/)
 4. Helm [installed](https://helm.sh/docs/intro/install/) 
 5. Kubernetes CLI (kubectl)[installed](https://kubernetes.io/docs/tasks/tools/install-kubectl/) 
 6. Admin access for Prefect Cloud and your cloud provider. You can downgrade it after this setup.
@@ -180,7 +180,7 @@ If you already have a registry, skip ahead to the next section.
 
 ## Create a Kubernetes work pool
 
-[Work pools](/v3/deploy/infrastructure-concepts/work-pools/) allow you to manage deployment 
+[Work pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/) allow you to manage deployment 
 infrastructure.
 This section shows you how to configure the default values for your 
 Kubernetes base job template.
@@ -412,9 +412,9 @@ The `prefect.yaml` file currently allows for more customization in terms of push
 steps.
 
 To learn about the Python deployment creation method with `flow.deploy` see 
-[Workers](/v3/deploy/infrastructure-examples/docker/).
+[Workers](https://docs.prefect.io/v3/deploy/infrastructure-examples/docker/).
 
-The [`prefect.yaml`](/v3/deploy/infrastructure-concepts/prefect-yaml/#managing-deployments) file is used 
+The [`prefect.yaml`](https://docs.prefect.io/v3/deploy/infrastructure-concepts/prefect-yaml/#managing-deployments) file is used 
 by the `prefect deploy` command to deploy your flows.
 As a part of that process it also builds and pushes your image.
 Create a new file named `prefect.yaml` with the following contents:

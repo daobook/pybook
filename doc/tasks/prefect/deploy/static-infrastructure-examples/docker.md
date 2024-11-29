@@ -1,6 +1,6 @@
 # Serve flows in a long-lived Docker container
 
-The `.serve` method allows you to easily elevate a flow to a deployment, listening for scheduled work to execute [as a local process](/v3/deploy/run-flows-in-local-processes).
+The `.serve` method allows you to easily elevate a flow to a deployment, listening for scheduled work to execute [as a local process](https://docs.prefect.io/v3/deploy/run-flows-in-local-processes).
 
 However, this _"local"_ process does not need to be on your local machine. In this example we show how to run a flow in Docker container on your local machine, but you could use a Docker container on any machine that has [Docker installed](https://docs.docker.com/engine/install/).
 

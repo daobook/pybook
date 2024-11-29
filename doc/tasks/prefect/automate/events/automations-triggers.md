@@ -1,92 +1,84 @@
-# Trigger actions on events
+# 在事件上触发操作
 
-Automations enable you to configure [actions](#actions) that execute automatically based on [trigger](#triggers) conditions.
+自动化使您能够配置在满足 [触发器](#triggers) 条件时自动执行的 [操作](#actions)。
 
-Potential triggers include the occurrence of events from changes in a flow run's state—or the absence of such events.
-You can define your own custom trigger to fire based on a custom [event](/v3/automate/events/custom-triggers/) defined in Python code.
-With Prefect Cloud you can even create [webhooks](/v3/automate/events/webhook-triggers/) that can receive data for use in actions.
+潜在的触发器包括流运行状态变化的事件——或此类事件的缺失。您可以定义自己的自定义触发器，以基于在 Python 代码中定义的 [事件](https://docs.prefect.io/v3/automate/events/custom-triggers/) 触发。使用 Prefect Cloud，您甚至可以创建 [Webhook](https://docs.prefect.io/v3/automate/events/webhook-triggers/)，用于接收数据以在操作中使用。
 
-Actions include starting flow runs, pausing schedules, and sending custom notifications.
+操作包括启动流运行、暂停计划和发送自定义通知。
 
-## Create an automation
+## 创建自动化
 
-On the **Automations** page, select the **+** icon to create a new automation. You'll be prompted to configure:
+在 **自动化** 页面上，选择 **+** 图标以创建新的自动化。系统将提示您配置：
 
-- A [trigger](#triggers) condition that causes the automation to execute.
-- One or more [actions](#actions) carried out by the automation.
-- [Details](#details) about the automation, such as a name and description.
+- 导致自动化执行的 [触发器](#triggers) 条件。
+- 自动化执行的一个或多个 [操作](#actions)。
+- 自动化的 [详细信息](#details)，例如名称和描述。
 
-## Manage automations
+## 管理自动化
 
-The **Automations** page provides an overview of all configured automations for your workspace.
+**自动化** 页面提供了工作区中所有配置的自动化的概览。
 
-![Viewing automations for a workspace in Prefect Cloud.](/v3/img/ui/automations.png)
+![在 Prefect Cloud 中查看工作区的自动化。](https://docs.prefect.io/v3/img/ui/automations.png)
 
-Select the toggle next to an automation to pause execution of the automation.
+选择自动化旁边的切换按钮以暂停自动化的执行。
 
-The button next to the toggle provides commands to copy the automation ID, edit the automation, or delete the automation.
+切换按钮旁边的按钮提供复制自动化 ID、编辑自动化或删除自动化的命令。
 
-Select the name of an automation to view **Details** about it and relevant **Events**.
+选择自动化的名称以查看其 **详细信息** 和相关 **事件**。
 
-### Triggers
+### 触发器
 
-Triggers specify the conditions under which your action should be performed. The Prefect UI includes templates for many
-common conditions, such as:
+触发器指定应执行操作的条件。Prefect UI 包含许多常见条件的模板，例如：
 
-- Flow run state change (Flow Run Tags are only evaluated with `OR` criteria)
-- Work pool status
-- Work queue status
-- Deployment status
-- Metric thresholds, such as average duration, lateness, or completion percentage
-- Custom event triggers
+- 流运行状态变化（流运行标签仅使用 `OR` 标准进行评估）
+- 工作池状态
+- 工作队列状态
+- 部署状态
+- 指标阈值，例如平均持续时间、延迟或完成百分比
+- 自定义事件触发器
 
 <Note>
-**Automations API**
+**自动化 API**
 
-The [automations API](https://app.prefect.cloud/api/docs#tag/Automations) enables further programmatic customization of
-trigger and action policies based on arbitrary [events](https://app.prefect.cloud/api/docs#tag/Events).
+[自动化 API](https://app.prefect.cloud/api/docs#tag/Automations) 使您能够基于任意 [事件](https://app.prefect.cloud/api/docs#tag/Events) 进一步定制触发器和操作策略。
 </Note>
 
-Importantly, you can configure the triggers not only in reaction to events, but also proactively: in the absence of
-an expected event.
+重要的是，您不仅可以配置对事件的反应触发器，还可以主动配置：在没有预期事件的情况下。
 
-![Configuring a trigger for an automation in Prefect Cloud.](/v3/img/ui/automations-trigger.png)
+![在 Prefect Cloud 中配置自动化的触发器。](https://docs.prefect.io/v3/img/ui/automations-trigger.png)
 
-For example, in the case of flow run state change triggers, you might expect production flows to finish in no longer
-than thirty minutes. But transient infrastructure or network issues could cause your flow to get “stuck” in a running state.
-A trigger could kick off an action if the flow stays in a running state for more than 30 minutes.
+例如，在流运行状态变化触发器的情况下，您可能期望生产流在不超过三十分钟内完成。但瞬态基础设施或网络问题可能会导致您的流在运行状态下“卡住”。如果流在运行状态下停留超过 30 分钟，触发器可以启动一个操作。
 
-This action could be taken on the flow itself, such as cancelling or restarting it. Or the action could take the form of a
-notification for someone to take manual remediation steps. Or you could set both actions to take place when the trigger occurs.
+此操作可以针对流本身，例如取消或重新启动它。或者操作可以是通知某人采取手动补救步骤的形式。或者您可以设置在触发器发生时同时执行这两个操作。
 
-### Actions
+### 操作
 
-Actions specify what your automation does when its trigger criteria are met. Current action types include:
+操作指定当触发器条件满足时自动化执行的操作。当前的操作类型包括：
 
-- Cancel a flow run
-- Pause or resume a schedule
-- Run a deployment
-- Pause or resume a deployment schedule
-- Pause or resume a work pool
-- Pause or resume a work queue
-- Pause or resume an automation
-- Send a [notification](#automation-notifications)
-- Call a webhook
-- Suspend a flow run
-- Change the state of a flow run
+- 取消流运行
+- 暂停或恢复计划
+- 运行部署
+- 暂停或恢复部署计划
+- 暂停或恢复工作池
+- 暂停或恢复工作队列
+- 暂停或恢复自动化
+- 发送 [通知](#automation-notifications)
+- 调用 Webhook
+- 暂停流运行
+- 更改流运行状态
 
-![Configuring an action for an automation in Prefect Cloud.](/v3/img/ui/automations-action.png)
+![在 Prefect Cloud 中配置自动化的操作。](https://docs.prefect.io/v3/img/ui/automations-action.png)
 
-### Create automations In Python code
+### 在 Python 代码中创建自动化
 
-You can create and access any automation with the Python SDK's `Automation` class and its methods.
+您可以使用 Python SDK 的 `Automation` 类及其方法创建和访问任何自动化。
 
 ```python
 from prefect.automations import Automation
 from prefect.events.schemas.automations import EventTrigger
 from prefect.events.actions import CancelFlowRun
 
-# creating an automation
+# 创建自动化
 automation = Automation(
     name="woodchonk",
     trigger=EventTrigger(
@@ -103,47 +95,39 @@ automation = Automation(
 print(automation)
 # name='woodchonk' description='' enabled=True trigger=EventTrigger(type='event', match=ResourceSpecification(__root__={'genus': 'Marmota', 'species': 'monax'}), match_related=ResourceSpecification(__root__={}), after=set(), expect={'animal.walked'}, for_each=set(), posture=Posture.Reactive, threshold=3, within=datetime.timedelta(seconds=10)) actions=[CancelFlowRun(type='cancel-flow-run')] actions_on_trigger=[] actions_on_resolve=[] owner_resource=None id=UUID('d641c552-775c-4dc6-a31e-541cb11137a6')
 
-# reading the automation
+# 读取自动化
 
 automation = Automation.read(id=automation.id)
-# or
+# 或者
 automation = Automation.read(name="woodchonk")
 
 print(automation)
 # name='woodchonk' description='' enabled=True trigger=EventTrigger(type='event', match=ResourceSpecification(__root__={'genus': 'Marmota', 'species': 'monax'}), match_related=ResourceSpecification(__root__={}), after=set(), expect={'animal.walked'}, for_each=set(), posture=Posture.Reactive, threshold=3, within=datetime.timedelta(seconds=10)) actions=[CancelFlowRun(type='cancel-flow-run')] actions_on_trigger=[] actions_on_resolve=[] owner_resource=None id=UUID('d641c552-775c-4dc6-a31e-541cb11137a6')
 ```
 
-### Selected and inferred action targets
+### 选定和推断的操作目标
 
-Some actions require you to either select the target of the action, or specify that the target of the action should be
-inferred. Selected targets are simple and useful for when you know exactly what object your action should act on. For
-example, the case of a cleanup flow you want to run or a specific notification you want to send.
+某些操作要求您选择操作的目标，或指定应推断操作的目标。选定的目标是简单且有用的，当您确切知道操作应作用于哪个对象时。例如，您想要运行的清理流或您想要发送的特定通知。
 
-Inferred targets are deduced from the trigger itself.
+推断的目标是从触发器本身推断出来的。
 
-For example, if a trigger fires on a flow run that is stuck in a running state, and the action is to cancel an inferred
-flow run—the flow run that caused the trigger to fire.
+例如，如果触发器在流运行卡在运行状态下触发，并且操作是取消推断的流运行——导致触发器触发的流运行。
 
-Similarly, if a trigger fires on a work queue event and the corresponding action is to pause an inferred work queue, the
-inferred work queue is the one that emitted the event.
+类似地，如果触发器在工作队列事件上触发，并且相应的操作是暂停推断的工作队列，则推断的工作队列是发出事件的工作队列。
 
-Prefect infers the relevant event whenever possible, but sometimes one does not exist.
+Prefect 尽可能推断相关事件，但有时不存在相关事件。
 
-Specify a name and, optionally, a description for the automation.
+为自动化指定名称，并可选地指定描述。
 
-## Create an automation with deployment triggers
+## 使用部署触发器创建自动化
 
-To enable the simple configuration of event-driven deployments, Prefect provides deployment triggers—a shorthand for
-creating automations that are linked to specific deployments to run them based on the presence or absence of events.
+为了简化事件驱动部署的配置，Prefect 提供了部署触发器——一种简写方式，用于创建与特定部署链接的自动化，以基于事件的存在或缺失运行它们。
 
-Trigger definitions for deployments are supported in `prefect.yaml`, `.serve`, and `.deploy`. At deployment time,
-specified trigger definitions create linked automations triggered by events matching your chosen
-[grammar](/v3/automate/events/events/#event-grammar). Each trigger definition may include a [jinja template](https://en.wikipedia.org/wiki/Jinja_(template_engine))
-to render the triggering `event` as the `parameters` of your  deployment's flow run.
+部署的触发器定义在 `prefect.yaml`、`.serve` 和 `.deploy` 中受支持。在部署时，指定的触发器定义创建由与您选择的 [语法](https://docs.prefect.io/v3/automate/events/events/#event-grammar) 匹配的事件触发的链接自动化。每个触发器定义可以包括一个 [Jinja 模板](https://en.wikipedia.org/wiki/Jinja_(template_engine)) 来将触发的 `event` 渲染为部署的流运行的 `parameters`。
 
-### Define triggers in `prefect.yaml`
+### 在 `prefect.yaml` 中定义触发器
 
-You can include a list of triggers on any deployment in a `prefect.yaml` file:
+您可以在 `prefect.yaml` 文件中的任何部署中包含一个触发器列表：
 
 ```yaml
 deployments:
@@ -162,8 +146,7 @@ deployments:
           param_1: "{{ event }}"
 ```
 
-This deployment creates a flow run when an `external.resource.pinged` event _and_ an `external.resource.replied`
-event have been seen from `my.external.resource`:
+此部署在从 `my.external.resource` 看到 `external.resource.pinged` 事件 _和_ `external.resource.replied` 事件时创建流运行：
 
 ```yaml
 deployments:
@@ -189,11 +172,9 @@ deployments:
               - external.resource.replied
 ```
 
-### Define triggers in `.serve` and `.deploy`
+### 在 `.serve` 和 `.deploy` 中定义触发器
 
-To create deployments with triggers in Python, the trigger types `DeploymentEventTrigger`,
-`DeploymentMetricTrigger`, `DeploymentCompoundTrigger`, and `DeploymentSequenceTrigger` can be imported
-from `prefect.events`:
+要在 Python 中创建带有触发器的部署，可以从 `prefect.events` 导入触发器类型 `DeploymentEventTrigger`、`DeploymentMetricTrigger`、`DeploymentCompoundTrigger` 和 `DeploymentSequenceTrigger`：
 
 ```python
 from prefect import flow
@@ -221,7 +202,7 @@ if __name__=="__main__":
     )
 ```
 
-As with prior examples, you must supply composite triggers with a list of underlying triggers:
+与之前的示例一样，您必须使用一个底层触发器列表提供复合触发器：
 
 ```python
 from prefect import flow
@@ -263,14 +244,12 @@ if __name__=="__main__":
     )
 ```
 
+### 将触发器传递给 `prefect deploy`
 
-### Pass triggers to `prefect deploy`
-
-You can pass one or more `--trigger` arguments to `prefect deploy` as either a JSON string or a
-path to a `.yaml` or `.json` file.
+您可以将一个或多个 `--trigger` 参数作为 JSON 字符串或 `.yaml` 或 `.json` 文件的路径传递给 `prefect deploy`。
 
 ```bash
-# Pass a trigger as a JSON string
+# 将触发器作为 JSON 字符串传递
 prefect deploy -n test-deployment \
   --trigger '{
     "enabled": true,
@@ -280,12 +259,12 @@ prefect deploy -n test-deployment \
     "expect": ["prefect.flow-run.Completed"]
   }'
 
-# Pass a trigger using a JSON/YAML file
+# 使用 JSON/YAML 文件传递触发器
 prefect deploy -n test-deployment --trigger triggers.yaml
 prefect deploy -n test-deployment --trigger my_stuff/triggers.json
 ```
 
-For example, a `triggers.yaml` file could have many triggers defined:
+例如，`triggers.yaml` 文件可以定义多个触发器：
 
 ```yaml
 triggers:
@@ -305,37 +284,33 @@ triggers:
       param_1: "{{ event }}"
 ```
 
-Both of the above triggers would be attached to `test-deployment` after running `prefect deploy`.
+运行 `prefect deploy` 后，上述两个触发器都将附加到 `test-deployment`。
 
 <Warning>
-**Triggers passed to `prefect deploy` will override any triggers defined in `prefect.yaml`**
+**传递给 `prefect deploy` 的触发器将覆盖 `prefect.yaml` 中定义的触发器**
 
-While you can define triggers in `prefect.yaml` for a given deployment, triggers passed to `prefect deploy`
-take precedence over those defined in `prefect.yaml`.
+虽然您可以为给定部署在 `prefect.yaml` 中定义触发器，但传递给 `prefect deploy` 的触发器优先于 `prefect.yaml` 中定义的触发器。
 </Warning>
 
-Note that deployment triggers contribute to the total number of automations in your workspace.
+请注意，部署触发器计入工作区中自动化的总数。
 
-## Sending notifications with automations
+## 使用自动化发送通知
 
+自动化支持通过任何能够且配置为发送消息的预定义块发送通知，包括：
 
-Automations support sending notifications through any predefined block that is capable of and configured
-to send a message, including:
+- 向 Slack 频道发送消息
+- 向 Microsoft Teams 频道发送消息
+- 向电子邮件地址发送电子邮件
 
-- Slack message to a channel
-- Microsoft Teams message to a channel
-- Email to an email address
+![在 Prefect Cloud 中配置自动化的通知。](https://docs.prefect.io/v3/img/ui/automations-notifications.png)
 
-![Configuring notifications for an automation in Prefect Cloud.](/v3/img/ui/automations-notifications.png)
+## 使用 Jinja 模板
 
-## Templating with Jinja
+您可以通过 [Jinja](https://palletsprojects.com/p/jinja/) 语法访问自动化操作中的模板变量。模板变量使您能够动态包含自动化触发器的详细信息，例如流或池名称。
 
-You can access templated variables with automation actions through [Jinja](https://palletsprojects.com/p/jinja/) syntax.
-Templated variables enable you to dynamically include details from an automation trigger, such as a flow or pool name.
+Jinja 模板变量语法将变量名称包裹在双大括号中，如下所示：`{{ variable }}`。
 
-Jinja templated variable syntax wraps the variable name in double curly brackets, like this: `{{ variable }}`.
-
-You can access properties of the underlying flow run objects including:
+您可以访问底层流运行对象的属性，包括：
 
 - [flow_run](https://prefect-python-sdk-docs.netlify.app/prefect/server/schemas/core/#prefect.server.schemas.core.FlowRun)
 - [flow](https://prefect-python-sdk-docs.netlify.app/prefect/server/schemas/core/#prefect.server.schemas.core.Flow)
@@ -343,82 +318,78 @@ You can access properties of the underlying flow run objects including:
 - [work_queue](https://prefect-python-sdk-docs.netlify.app/prefect/server/schemas/core/#prefect.server.schemas.core.WorkQueue)
 - [work_pool](https://prefect-python-sdk-docs.netlify.app/prefect/server/schemas/core/#prefect.server.schemas.core.WorkPool)
 
-In addition to its native properties, each object includes an `id` along with `created` and `updated` timestamps.
+除了其原生属性外，每个对象还包括一个 `id` 以及 `created` 和 `updated` 时间戳。
 
-The `flow_run|ui_url` token returns the URL to view the flow run in the UI.
+`flow_run|ui_url` 令牌返回在 UI 中查看流运行的 URL。
 
-Here's an example relevant to a flow run state-based notification:
-
-```
-Flow run {{ flow_run.name }} entered state {{ flow_run.state.name }}.
-
-    Timestamp: {{ flow_run.state.timestamp }}
-    Flow ID: {{ flow_run.flow_id }}
-    Flow Run ID: {{ flow_run.id }}
-    State message: {{ flow_run.state.message }}
-```
-
-The resulting Slack webhook notification looks something like this:
-
-![Configuring notifications for an automation in Prefect Cloud.](/v3/img/ui/templated-notification.png)
-
-You could include `flow` and `deployment` properties:
+以下是与流运行状态相关的通知示例：
 
 ```
-Flow run {{ flow_run.name }} for flow {{ flow.name }}
-entered state {{ flow_run.state.name }}
-with message {{ flow_run.state.message }}
+流运行 {{ flow_run.name }} 进入状态 {{ flow_run.state.name }}。
 
-Flow tags: {{ flow_run.tags }}
-Deployment name: {{ deployment.name }}
-Deployment version: {{ deployment.version }}
-Deployment parameters: {{ deployment.parameters }}
+    时间戳：{{ flow_run.state.timestamp }}
+    流 ID：{{ flow_run.flow_id }}
+    流运行 ID：{{ flow_run.id }}
+    状态消息：{{ flow_run.state.message }}
 ```
 
-An automation that reports on work pool status might include notifications using `work_pool` properties:
+生成的 Slack Webhook 通知如下所示：
+
+![在 Prefect Cloud 中配置自动化的通知。](https://docs.prefect.io/v3/img/ui/templated-notification.png)
+
+您可以包含 `flow` 和 `deployment` 属性：
 
 ```
-Work pool status alert!
+流运行 {{ flow_run.name }} 对于流 {{ flow.name }}
+进入状态 {{ flow_run.state.name }}
+带有消息 {{ flow_run.state.message }}
 
-Name: {{ work_pool.name }}
-Last polled: {{ work_pool.last_polled }}
+流标签：{{ flow_run.tags }}
+部署名称：{{ deployment.name }}
+部署版本：{{ deployment.version }}
+部署参数：{{ deployment.parameters }}
 ```
 
-In addition to those shortcuts for flows, deployments, and work pools, you have access to the automation and the
-event that triggered the automation. See the [Automations API](https://app.prefect.cloud/api/docs#tag/Automations)
-for additional details.
+一个报告工作池状态的自动化可能包括使用 `work_pool` 属性的通知：
 
 ```
-Automation: {{ automation.name }}
-Description: {{ automation.description }}
+工作池状态警报！
 
-Event: {{ event.id }}
-Resource:
+名称：{{ work_pool.name }}
+最后轮询：{{ work_pool.last_polled }}
+```
+
+除了这些用于流、部署和工作池的快捷方式外，您还可以访问自动化和触发自动化的事件。有关更多详细信息，请参阅 [自动化 API](https://app.prefect.cloud/api/docs#tag/Automations)。
+
+```
+自动化：{{ automation.name }}
+描述：{{ automation.description }}
+
+事件：{{ event.id }}
+资源：
 {% for label, value in event.resource %}
-{{ label }}: {{ value }}
+{{ label }}：{{ value }}
 {% endfor %}
-Related Resources:
+相关资源：
 {% for related in event.related %}
-    Role: {{ related.role }}
+    角色：{{ related.role }}
     {% for label, value in related %}
-    {{ label }}: {{ value }}
+    {{ label }}：{{ value }}
     {% endfor %}
 {% endfor %}
 ```
 
-Note that this example also illustrates the ability to use Jinja features such as iterator and for loop
-[control structures](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-control-structures) when
-templating notifications.
+请注意，此示例还展示了在模板通知时使用 Jinja 功能（如迭代器和 for 循环 [控制结构](https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-control-structures)）的能力。
 
-## API example
+## API 示例
 
-This example grabs data from an API and sends a notification based on the end state.
+此示例从 API 获取数据，并根据最终状态发送通知。
 
-### Create the example script
+### 创建示例脚本
 
-Start by pulling hypothetical user data from an endpoint and then performing data cleaning and transformations.
+首先从端点提取假设的用户数据，然后执行数据清理和转换。
 
-First create a simple extract method that pulls the data from a random user data generator endpoint:
+首先创建一个简单的提取方法，从随机用户数据生成器端点拉取数据：
 
 ```python
 from prefect import flow, task, get_run_logger
@@ -430,7 +401,7 @@ def fetch(url: str):
     logger = get_run_logger()
     response = requests.get(url)
     raw_data = response.json()
-    logger.info(f"Raw response: {raw_data}")
+    logger.info(f"原始响应：{raw_data}")
     return raw_data
 
 @task
@@ -438,7 +409,7 @@ def clean(raw_data: dict):
     print(raw_data.get('results')[0])
     results = raw_data.get('results')[0]
     logger = get_run_logger()
-    logger.info(f"Cleaned results: {results}")
+    logger.info(f"清理结果：{results}")
     return results['name']
 
 @flow
@@ -451,85 +422,78 @@ def build_names(num: int = 10):
         raw_data = fetch(url)
         df.append(clean(raw_data))
         num -= 1
-    logger.info(f"Built {copy} names: {df}")
+    logger.info(f"构建了 {copy} 个名字：{df}")
     return df
 
 if __name__ == "__main__":
     list_of_names = build_names()
 ```
 
-The data cleaning workflow has visibility into each step, and sends a list of names to the next step of the pipeline.
+数据清理工作流可以查看每个步骤，并将名字列表发送到管道的下一步。
 
-### Create a notification block in the UI
-Next, send a notification based off a completed state outcome. Configure a notification that shows when to look into your
-workflow logic.
+### 在 UI 中创建通知块
 
-1. Prior to creating the automation, confirm the notification location. Create a notification block to help define where
-the notification is sent.
-![List of available blocks](/v3/img/guides/block-list.png)
+接下来，根据完成状态结果发送通知。配置一个通知，显示何时查看工作流逻辑。
 
-2. Navigate to the blocks page on the UI, and click into creating an email notification block.
-![Creating a notification block in the Cloud UI](/v3/img/guides/notification-block.png)
+1. 在创建自动化之前，确认通知位置。创建一个通知块以帮助定义通知的发送位置。
+![可用块列表](https://docs.prefect.io/v3/img/guides/block-list.png)
 
-3. Go to the automations page to create your first automation.
-![Automations page](/v3/img/guides/automation-list.png)
+2. 导航到 UI 中的块页面，并点击创建电子邮件通知块。
+![在 Cloud UI 中创建通知块](https://docs.prefect.io/v3/img/guides/notification-block.png)
 
-4. Next, find the trigger type. In this case, use a flow completion.
-![Trigger type](/v3/img/guides/automation-triggers.png)
+3. 转到自动化页面以创建您的第一个自动化。
+![自动化页面](https://docs.prefect.io/v3/img/guides/automation-list.png)
 
-5. Create the actions for when the trigger is hit. In this case, create a notification to showcase the
-completion.
-![Notification block in automation](/v3/img/guides/notify-auto-block.png)
+4. 接下来，找到触发器类型。在这种情况下，使用流完成触发器。
+![触发器类型](https://docs.prefect.io/v3/img/guides/automation-triggers.png)
 
-6. Now the automation is ready to be triggered from a flow run completion. Run the file locally and see that the
-notification is sent to your inbox after the completion. It may take a few minutes for the notification to arrive.
-![Final notification](/v3/img/guides/final-automation.png)
+5. 创建触发器命中的操作。在这种情况下，创建一个通知以展示完成情况。
+![自动化中的通知块](https://docs.prefect.io/v3/img/guides/notify-auto-block.png)
+
+6. 现在自动化已准备好从流运行完成触发。在本地运行文件，并查看完成后通知发送到您的收件箱。通知可能需要几分钟才能到达。
+![最终通知](https://docs.prefect.io/v3/img/guides/final-automation.png)
 
 <Tip>
-**No deployment created**
+**无需创建部署**
 
-You do not need to create a deployment to trigger your automation. In the case above, the flow run state trigger fired in response to a flow run that was executed locally.
+您无需创建部署来触发自动化。在上面的例子中，流运行状态触发器在本地执行的流运行完成后触发。
 </Tip>
 
-Now that you've seen how to create an email notification from a flow run completion, see how to kick off a deployment
-run in response to an event.
+现在您已经了解了如何从流运行完成创建电子邮件通知，请了解如何根据事件启动部署运行。
 
-### Event-based deployment automation
-Create an automation to kick off a deployment instead of a notification. Explore how to programmatically create this
-automation with Prefect's REST API.
+### 基于事件的部署自动化
 
-See the [REST API documentation](https://docs.prefect.io/latest/api-ref/rest-api/#interacting-with-the-rest-api) as a reference for interacting with the automation endpoints.
+创建一个自动化以启动部署而不是通知。探索如何使用 Prefect 的 REST API 以编程方式创建此自动化。
 
-Create a deployment to kick off some work based on how long a flow is running. For example, if the `build_names` flow
-takes too long to execute, you can kick off a deployment with the same `build_names` flow, but replace the `count` value
-with a lower number to speed up completion.
-Create a deployment with a `prefect.yaml` file or a Python file that uses `flow.deploy`.
+请参阅 [REST API 文档](https://docs.prefect.io/latest/api-ref/rest-api/#interacting-with-the-rest-api) 作为与自动化端点交互的参考。
+
+创建一个部署，以基于流运行的时间启动一些工作。例如，如果 `build_names` 流执行时间过长，您可以启动一个带有相同 `build_names` 流的部署，但将 `count` 值替换为较低的数字以加快完成速度。
+
+使用 `prefect.yaml` 文件或使用 `flow.deploy` 的 Python 文件创建部署。
 <Tabs>
 <Tab title="prefect.yaml">
 
-    Create a `prefect.yaml` file like this one for our flow `build_names`:
+    为我们的流 `build_names` 创建一个 `prefect.yaml` 文件，如下所示：
 
     ```yaml
-      # Welcome to your prefect.yaml file! You can use this file for storing and managing
-      # configuration for deploying your flows. We recommend committing this file to source
-      # control along with your flow code.
+      # 欢迎使用您的 prefect.yaml 文件！您可以使用此文件来存储和管理部署流代码的配置。我们建议将此文件与您的流代码一起提交到源代码控制中。
 
-      # Generic metadata about this project
+      # 有关此项目的通用元数据
       name: automations-guide
       prefect-version: 3.0.0
 
-      # build section allows you to manage and build docker images
+      # 构建部分允许您管理和构建 Docker 镜像
       build: null
 
-      # push section allows you to manage if and how this project is uploaded to remote locations
+      # 推送部分允许您管理是否以及如何将此项目上传到远程位置
       push: null
 
-      # pull section allows you to provide instructions for cloning this project in remote locations
+      # 拉取部分允许您提供在远程位置克隆此项目的说明
       pull:
       - prefect.deployments.steps.set_working_directory:
           directory: /Users/src/prefect/Playground/automations-guide
 
-      # the deployments section allows you to provide configuration for deploying flows
+      # 部署部分允许您提供部署流的配置
       deployments:
       - name: deploy-build-names
         version: null
@@ -547,11 +511,11 @@ Create a deployment with a `prefect.yaml` file or a Python file that uses `flow.
 
   <Tab title=".deploy">
 
-    To follow a more Python-based approach to create a deployment, use `flow.deploy` as in the example below:
+    要遵循更基于 Python 的方法来创建部署，请使用 `flow.deploy`，如下例所示：
 
     ```python
-    # .deploy only needs a name, valid work pool
-    # and a reference to where the flow code exists
+    # .deploy 只需要一个名称、有效的工作池
+    # 以及对流代码存在的引用
 
     if __name__ == "__main__":
     build_names.deploy(
@@ -563,12 +527,12 @@ Create a deployment with a `prefect.yaml` file or a Python file that uses `flow.
   </Tab>
 </Tabs>
 
-Grab your `deployment_id` from this deployment with the CLI and embed it in your automation.
+从 CLI 获取此部署的 `deployment_id` 并将其嵌入到您的自动化中。
 
 <Tip>
-**Find deployment_id from the CLI**
+**从 CLI 查找 deployment_id**
 
-Run `prefect deployment ls` in an authenticated command prompt.
+在经过身份验证的命令提示符中运行 `prefect deployment ls`。
 </Tip>
 
 ```bash
@@ -582,7 +546,7 @@ prefect deployment ls
 │ ride-duration-prediction-backfill/backfill-deployment │ 76dc6581-1773-45c5-a291-7f864d064c57 │
 └───────────────────────────────────────────────────────┴──────────────────────────────────────┘
 ```
-Create an automation with a POST call to programmatically create the automation. Ensure you have your `api_key`, `account_id`, and `workspace_id`.
+创建一个自动化，使用 POST 调用以编程方式创建自动化。确保您有 `api_key`、`account_id` 和 `workspace_id`。
 
 ```python
 def create_event_driven_automation():
@@ -623,21 +587,17 @@ def create_event_driven_automation():
     return response.json()
 ```
 
-After running this function, you will see the changes that came from the post request within the UI. Keep in mind the
-context is "custom" on UI.
+运行此函数后，您将在 UI 中看到来自 POST 请求的更改。请记住，上下文在 UI 中是“自定义”的。
 
-Run the underlying flow and see the deployment kick off after 30 seconds. This results in a new flow run of `build_names`.
-You can see this new deployment get initiated with the custom parameters outlined above.
+运行底层流并查看部署在 30 秒后启动。这将导致 `build_names` 的新流运行。您可以看到此新部署使用上述自定义参数启动。
 
-In a few quick changes, you can programmatically create an automation that deploys workflows with custom parameters.
+通过几个快速更改，您可以以编程方式创建一个自动化，该自动化使用自定义参数部署工作流。
 
-## Use an underlying .yaml file
+## 使用底层的 .yaml 文件
 
-You can take this a step further by using your own .yaml version of the automation, and registering that file with the UI.
-This simplifies the requirements of the automation by declaring it in its own .yaml file, and then registering that .yaml
-with the API.
+您可以通过使用自己的 .yaml 版本的自动化并将其注册到 UI 来进一步简化此操作。这通过在 .yaml 文件中声明自动化要求，然后使用 API 注册该 .yaml 文件来简化自动化的要求。
 
-First start with creating the .yaml file to house the automation requirements:
+首先创建一个 .yaml 文件来存放自动化要求：
 
 ```yaml automation.yaml
 name: Cancel long running flows
@@ -659,7 +619,7 @@ actions:
   - type: "cancel-flow-run"
 ```
 
-Make a helper function that applies this YAML file with the REST API function.
+创建一个辅助函数，使用 REST API 函数应用此 YAML 文件。
 
 ```python
 import yaml
@@ -689,27 +649,23 @@ if __name__ == "__main__":
     create_or_update_automation()
 ```
 
-Find a complete repo with these APIs examples in this [GitHub repository](https://github.com/EmilRex/prefect-api-examples/tree/main).
+在此示例中，您通过注册 .yaml 文件创建了自动化。
 
-In this example, you created the automation by registering the .yaml file with a helper function.
-
-## Kick off an automation with a custom webhook
+## 使用自定义 Webhook 启动自动化
 
 {/*
 <!-- vale off -->
 */}
 
-Use webhooks to expose the events API. This allows you to extend the functionality of deployments and respond to
-changes in your workflow.
+使用 Webhook 公开事件 API。这使您能够扩展部署的功能并响应工作流中的更改。
 
 {/*
 <!-- vale on -->
 */}
 
-By exposing a webhook endpoint, you can kick off workflows that trigger deployments, all from an event created from an
-HTTP request.
+通过公开 Webhook 端点，您可以从 HTTP 请求创建的事件启动触发部署的工作流。
 
-Create this webhook in the UI to create these dynamic events.
+在 UI 中创建此 Webhook 以创建这些动态事件。
 
 ```JSON
 {
@@ -721,34 +677,32 @@ Create this webhook in the UI to create these dynamic events.
     }
 }
 ```
-From this input, you can create an exposed webhook endpoint.
 
-![webhook-simple](/v3/img/guides/webhook-simple.png)
+从该输入中，您可以创建一个公开的 Webhook 端点。
 
-Each webhook corresponds to a custom event created where you can react to it downstream with a separate deployment or
-automation.
+![webhook-simple](https://docs.prefect.io/v3/img/guides/webhook-simple.png)
 
-For example, you can create a curl request that sends the endpoint information such as a run count for your deployment:
+每个 Webhook 对应一个创建的自定义事件，您可以使用单独的部署或自动化对其做出反应。
+
+例如，您可以创建一个 curl 请求，发送端点信息，例如部署的运行计数：
 ```console
 curl -X POST https://api.prefect.cloud/hooks/34iV2SFke3mVa6y5Y-YUoA -d "model_id=adhoc" -d "run_count=10" -d "friendly_name=test-user-input"
 ```
-From here, you can make a webhook that is connected to pulling in parameters on the curl command. It kicks off a
-deployment that uses these pulled parameters:
-![Webhook created](/v3/img/guides/webhook-created.png)
 
-Go into the event feed to automate straight from this event:
-![Webhook automate](/v3/img/guides/webhook-automate.png)
+从这里，您可以创建一个连接到 curl 命令中拉取参数的 Webhook。它启动一个使用这些拉取参数的部署：
+![Webhook created](https://docs.prefect.io/v3/img/guides/webhook-created.png)
 
-This allows you to create automations that respond to these webhook events. From a few clicks in the UI, you can
-associate an external process with the Prefect events API that can trigger downstream deployments.
-![Automation custom](/v3/img/guides/automation-custom.png)
+进入事件源以直接从此事件自动化：
+![Webhook automate](https://docs.prefect.io/v3/img/guides/webhook-automate.png)
 
-## Examples
+这使您能够创建响应这些 Webhook 事件的自动化。通过 UI 中的几次点击，您可以将外部过程与 Prefect 事件 API 关联，该 API 可以触发下游部署。
+![Automation custom](https://docs.prefect.io/v3/img/guides/automation-custom.png)
 
+## 示例
 
-### Trigger a downstream deployment with an event
+### 使用事件触发下游部署
 
-This example shows how to use a trigger to schedule a downstream deployment when an upstream deployment completes.
+此示例展示了如何使用触发器在上游部署完成时调度下游部署。
 
 ```python event_driven_deployments.py
 from prefect import flow, serve
@@ -780,24 +734,24 @@ if __name__ == "__main__":
     serve(upstream_deployment, downstream_deployment)
 ```
 
-First, start the `serve` process to listen for scheduled deployments runs:
+首先，启动 `serve` 进程以侦听计划的部署运行：
 
 ```bash
 python event_driven_deployments.py
 ```
 
-Now, run the upstream deployment and see the downstream deployment kick off after it completes:
+现在，运行上游部署并查看下游部署在其完成后启动：
 
 ```bash
 prefect deployment run upstream-flow/upstream_deployment
 ```
 
 <Tip>
-**Check the event feed**
+**检查事件源**
 
-You can inspect raw events in the event feed in the UI to see what related resources are available to match against.
+您可以在 UI 中的事件源中检查原始事件，以查看可用于匹配的相关资源。
 
-For example, the following `prefect.flow-run.Completed` event's related resources include:
+例如，以下 `prefect.flow-run.Completed` 事件的相关资源包括：
 ```json
 {
    "related": [
@@ -821,10 +775,11 @@ For example, the following `prefect.flow-run.Completed` event's related resource
 ```
 </Tip>
 
-### Trigger a deployment when a customer completes an order
-Imagine you are running an e-commerce platform and you want to trigger a deployment when a customer completes an order.
+### 当客户完成订单时触发部署
 
-There might be a number of events that occur during an order on your platform, for example:
+想象一下，您正在运行一个电子商务平台，并且希望在客户完成订单时触发部署。
+
+在您的平台上，订单期间可能会发生许多事件，例如：
 
 - `order.created`
 - `order.item.added`
@@ -833,20 +788,18 @@ There might be a number of events that occur during an order on your platform, f
 - `order.complete`
 
 <Tip>
-**Event grammar**
+**事件语法**
 
-The above choices of event names are arbitrary. With Prefect events, you're free to select any event grammar that best
-represents your use case.
+上述事件名称的选择是任意的。使用 Prefect 事件，您可以自由选择最能代表您用例的事件语法。
 </Tip>
 
-In this case, we want to trigger a deployment when a user completes an order, so our trigger should:
+在这种情况下，我们希望在用户完成订单时触发部署，因此我们的触发器应：
 
-- `expect` an `order.complete` event
-- `after` an `order.created` event
-- evaluate these conditions `for_each` user id
+- `expect` 一个 `order.complete` 事件
+- `after` 一个 `order.created` 事件
+- 为每个用户 ID 评估这些条件
 
-
-Finally, it should pass the `user_id` as a parameter to the deployment. Here's how this looks in code:
+最后，它应将 `user_id` 作为参数传递给部署。以下是代码中的样子：
 
 ```python post_order_deployment.py
 from prefect import flow
@@ -862,7 +815,7 @@ order_complete = DeploymentEventTrigger(
 
 @flow(log_prints=True)
 def post_order_complete(user_id: str):
-    print(f"User {user_id} has completed an order -- doing stuff now")
+    print(f"用户 {user_id} 已完成订单 -- 现在执行操作")
 
 
 if __name__ == "__main__":
@@ -870,14 +823,14 @@ if __name__ == "__main__":
 ```
 
 <Tip>
-**Specify multiple events or resources**
+**指定多个事件或资源**
 
-The `expect` and `after` fields accept a `set` of event names, so you can specify multiple events for each condition.
+`expect` 和 `after` 字段接受事件名称的 `set`，因此您可以为每个条件指定多个事件。
 
-Similarly, the `for_each` field accepts a `set` of resource ids.
+同样，`for_each` 字段接受资源 ID 的 `set`。
 </Tip>
 
-To simulate users causing order status events, run the following in a Python shell or script:
+要模拟用户导致订单状态事件，请在 Python shell 或脚本中运行以下内容：
 
 ```python simulate_events.py
 import time
@@ -886,7 +839,7 @@ from prefect.events import emit_event
 user_id_1, user_id_2 = "123", "456"
 for event_name, user_id in [
     ("order.created", user_id_1),
-    ("order.created", user_id_2), # other user
+    ("order.created", user_id_2), # 其他用户
     ("order.complete", user_id_1),
 ]:
     event = emit_event(
@@ -894,16 +847,15 @@ for event_name, user_id in [
         resource={"prefect.resource.id": user_id},
     )
     time.sleep(1)
-    print(f"{user_id} emitted {event_name}")
+    print(f"{user_id} 发出 {event_name}")
 ```
 
-In the above example:
+在上面的示例中：
 
-- `user_id_1` creates and then completes an order, triggering a run of our deployment.
-- `user_id_2` creates an order, but no completed event is emitted so no deployment is triggered.
+- `user_id_1` 创建并完成订单，触发我们的部署运行。
+- `user_id_2` 创建订单，但没有发出完成事件，因此不会触发部署。
 
-## See also
+## 另请参阅
 
-- To learn more about Prefect events, which can trigger automations, see the [events docs](/v3/automate/events/events/).
-- See the [webhooks guide](/v3/automate/events/webhook-triggers/)
-to learn how to create webhooks and receive external events.
+- 要了解有关 Prefect 事件的更多信息，这些事件可以触发自动化，请参阅 [事件文档](https://docs.prefect.io/v3/automate/events/events/)。
+- 请参阅 [Webhook 指南](https://docs.prefect.io/v3/automate/events/webhook-triggers/) 以了解如何创建 Webhook 并接收外部事件。

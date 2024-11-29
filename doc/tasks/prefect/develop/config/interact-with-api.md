@@ -1,12 +1,11 @@
-# Manage run metadata in Python
+# 在 Python 中管理运行元数据
 
-The [`PrefectClient`](https://prefect-python-sdk-docs.netlify.app/prefect/client/) 
-contains many methods that make it simpler to perform actions, such as:
+[`PrefectClient`](https://prefect-python-sdk-docs.netlify.app/prefect/client/) 提供了许多方法，简化了执行操作的过程，例如：
 
-- reschedule late flow runs
-- get the last `N` completed flow runs from a workspace
+- 重新安排延迟的流程运行
+- 从工作区获取最后 `N` 个已完成的流程运行
 
-The `PrefectClient` is an async context manager. Here's an example usage:
+`PrefectClient` 是异步上下文管理器。以下是使用示例：
 
 ```python
 from prefect import get_client
@@ -17,17 +16,13 @@ async with get_client() as client:
     print(response.json()) # 👋
 ```
 
-## Examples
+## 示例
 
-### Reschedule late flow runs
+### 重新安排延迟的流程运行
 
-To bulk reschedule flow runs that are late, delete the late flow runs and create new ones in a 
-`Scheduled` state with a delay. This is useful if you accidentally scheduled many 
-flow runs of a deployment to an inactive work pool, for example.
+为了批量重新安排延迟的流程运行，删除这些延迟的流程运行并以一个带有延迟的“已计划”状态创建新的流程运行。例如，如果你不小心将许多部署的流程运行安排到一个不活跃的工作池中，这会很有用。
 
-The following example reschedules the last three late flow runs of a deployment named 
-`healthcheck-storage-test` to run six hours later than their original expected start time. 
-It also deletes any remaining late flow runs of that deployment.
+以下示例将名为 `healthcheck-storage-test` 的部署的最后三个延迟的流程运行重新安排在它们原始预期开始时间六小时后运行。同时，它也会删除该部署的任何剩余延迟的流程运行。
 
 ```python
 import asyncio
@@ -107,11 +102,10 @@ if __name__ == "__main__":
     )
 ```
 
-### Get the last `N` completed flow runs from your workspace
+### 从你的工作空间获取最后 `N` 个已完成的流程运行
 
-To get the last `N` completed flow runs from your workspace, use `read_flow_runs` and `prefect.client.schemas`.
-
-This example gets the last three completed flow runs from your workspace:
+要从你的工作空间获取最后`N`个已完成的流程运行，请使用`read_flow_runs`和`prefect.client.schemas`。
+这个例子将展示如何从你的工作空间获取最后三个已完成的流程运行：
 
 ```python
 import asyncio
@@ -154,13 +148,12 @@ if __name__ == "__main__":
     ) == sorted(end_times, reverse=True)
 ```
 
-Instead of the last three from the whole workspace, you can also use the `DeploymentFilter` 
-to get the last three completed flow runs of a specific deployment.
+与其从整个工作空间中获取最后三个，您还可以使用 `DeploymentFilter` 来获取特定部署的最后三个已完成的流程运行。
 
-### Transition all running flows to cancelled through the Client
+### 通过客户端将所有正在运行的流程转换为已取消状态
 
-Use `get_client`to set multiple runs to a `Cancelled` state.
-The code below cancels all flow runs that are in `Pending`, `Running`, `Scheduled`, or `Late` states when the script is run.
+使用 `get_client` 将多个运行设置为“已取消”状态。
+下面的代码在脚本运行时取消所有处于“待处理”、“运行中”、“计划中”或“延迟”状态的流程运行。
 
 ```python
 import anyio

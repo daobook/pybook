@@ -1,77 +1,59 @@
-# Configure task caching
+# 配置任务缓存
 
+缓存指的是任务运行能够进入“已完成”状态，并在不实际执行定义该任务的代码的情况下返回预定值的能力。缓存让你能够高效地重用那些可能计算成本高昂的任务结果，并确保在因意外失败而重新尝试时，你的工作流保持幂等性。
 
-Caching refers to the ability of a task run to enter a `Completed` state and return a predetermined 
-value without actually running the code that defines the task. 
-Caching allows you to efficiently reuse [results of tasks](/v3/develop/results/) that may be expensive to compute
-and ensure that your pipelines are idempotent when retrying them due to unexpected failure. 
+默认情况下，Prefect的缓存逻辑基于以下任务调用的属性：
+- 提供给任务的输入
+- 任务的代码定义
+- 当前的流程运行ID，或如果独立执行，则是当前任务运行 ID
 
-By default Prefect's caching logic is based on the following attributes of a task invocation:
-- the inputs provided to the task
-- the code definition of the task
-- the prevailing flow run ID, or if executed autonomously, the prevailing task run ID
+这些值被哈希以计算任务的 [缓存键](cache-keys)。这意味着，默认情况下，在同一个流程中多次调用同一个任务且使用相同输入时，第一次之后的调用将产生缓存行为。这种行为可以配置 - 参见下文的[自定义缓存](https://docs.prefect.io/v3/develop/write-tasks#customizing-the-cache)。
 
-These values are hashed to compute the task's _cache key_. 
-This implies that, by default, calling the same task with the same inputs more than once within a flow 
-will result in cached behavior for all calls after the first.
-This behavior can be configured - see [customizing the cache](/v3/develop/write-tasks#customizing-the-cache) below.
-
-<Warning>
-**Caching requires result persistence**
-
-Caching requires result persistence, which is off by default.
-To turn on result persistence for all of your tasks use the `PREFECT_RESULTS_PERSIST_BY_DEFAULT` setting:
+````{admonition} **缓存需要结果持久化**
+:class: warning
+缓存需要结果持久化，这在默认情况下是关闭的。要为所有任务开启结果持久化，请使用`PREFECT_RESULTS_PERSIST_BY_DEFAULT`设置：
 
 ```
 prefect config set PREFECT_RESULTS_PERSIST_BY_DEFAULT=true
 ```
 
-See [managing results](/v3/develop/results/) for more details on managing your result configuration, and
-[settings](/v3/develop/settings-and-profiles) for more details on managing Prefect settings.
-</Warning>
+有关管理结果配置的更多细节，请参阅[管理结果](https://docs.prefect.io/v3/develop/results)，以及有关管理Prefect设置的更多信息，请参阅[设置和配置文件](https://docs.prefect.io/v3/develop/settings-and-profiles)。
+````
 
-## Cache keys
+(cache-keys)=
+## 缓存键
 
-To determine whether a task run should retrieve a cached state, Prefect uses the concept of a "cache key". 
-A cache key is a computed string value that determines where the task's return value will be persisted within
-its configured result storage.
-When a task run begins, Prefect first computes its cache key and uses this key to lookup a record in the task's result
-storage. 
-If an unexpired record is found, this result is returned and the task does not run, but instead, enters a 
-`Cached` state with the corresponding result value.
+为了确定任务运行是否应该检索缓存状态，Prefect使用了称为“缓存键”的概念。
+缓存键是一个计算得出的字符串值，它决定任务的返回值将被持久化存储在配置的结果存储中的哪个位置。
+当一个任务开始运行时，Prefect首先计算它的缓存键，并使用这个键来查找任务结果存储中的记录。
+如果找到了未过期的记录，这个结果会被返回，任务不会运行，而是进入一个带有相应结果值的`Cached`状态。
 
-Cache keys can be shared by the same task across different flows, and even among different tasks, 
-so long as they all share a common result storage location.
+同一个任务在不同的流程中，甚至是不同的任务之间，只要它们共享一个公共的结果存储位置，就可以共享缓存键。
 
-By default Prefect stores results locally in `~/.prefect/storage/`. 
-The filenames in this directory will correspond exactly to computed cache keys from your task runs.
+默认情况下，Prefect会将结果本地存储在`~/.prefect/storage/`目录中。
+此目录中的文件名将与从您的任务运行中计算出的缓存键完全对应。
 
-<Warning>
-**Relationship with result persistence** 
+```{admonition} **与结果持久性的关系**
+:class: warning
 
-Task caching and result persistence are intimately related. Because task caching relies on loading a 
-known result, task caching will only work when your task can persist its output 
-to a fixed and known location.
+任务缓存和结果持久性密切相关。因为任务缓存依赖于加载已知的结果，所以只有当您的任务能够将其输出持久化到固定且已知的位置时，任务缓存才会起作用。
 
-Therefore any configuration which explicitly avoids result persistence will result in your task never
-using a cache, for example setting `persist_result=False`.
-</Warning>
+因此，任何明确避免结果持久性的配置都会导致您的任务永远不使用缓存，例如设置`persist_result=False`。
+```
 
-## Cache policies
+## 缓存策略
 
-Cache key computation can be configured through the use of _cache policies_. 
-A cache policy is a recipe for computing cache keys for a given task.
+可以通过使用 _缓存策略_ 来配置缓存键的计算。
+缓存策略是一种用于计算给定任务的缓存键的配方。
 
-Prefect comes prepackaged with a few common cache policies:
-- `DEFAULT`: this cache policy uses the task's inputs, its code definition, as well as the prevailing flow run ID
-to compute the task's cache key.
-- `INPUTS`: this cache policy uses _only_ the task's inputs to compute the cache key.
-- `TASK_SOURCE`: this cache policy uses _only_ the task's code definition to compute the cache key.
-- `FLOW_PARAMETERS`: this cache policy uses _only_ the parameter values provided to the parent flow run
-to compute the cache key.
-- `NONE`: this cache policy always returns `None` and therefore avoids caching and result persistence altogether.
+Prefect预先打包了一些常见的缓存策略：
+- `DEFAULT`: 此缓存策略使用任务的输入、其代码定义以及当前的流程运行ID来计算任务的缓存键。
+- `INPUTS`: 此缓存策略仅使用任务的输入来计算缓存键。
+- `TASK_SOURCE`: 此缓存策略仅使用任务的代码定义来计算缓存键。
+- `FLOW_PARAMETERS`: 此缓存策略仅使用提供给父流程运行的参数值来计算缓存键。
+- `NONE`: 此缓存策略总是返回`None`，因此完全避免缓存和结果持久化。
 
-These policies can be set using the `cache_policy` keyword on the [task decorator](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task):
+这些策略可以通过在[任务装饰器](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task)上使用`cache_policy`关键字来设置。
 
 ```python
 from prefect import task
@@ -104,29 +86,20 @@ def my_stateful_task():
 my_stateful_task() # sleeps again
 ```
 
-## Customizing the cache
+## 自定义缓存
 
-Prefect allows you to configure task caching behavior in numerous ways.
+Prefect允许您以多种方式配置任务的缓存行为。
 
-### Cache expiration
+### 缓存过期
 
-All cache keys can optionally be given an _expiration_ through the `cache_expiration` keyword on 
-the [task decorator](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task).
-This keyword accepts a `datetime.timedelta` specifying a duration for which the cached value should be
-considered valid.
+所有缓存键都可以通过[任务装饰器](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task)上的`cache_expiration`关键字来选择性地指定一个_过期时间_。该关键字接受一个`datetime.timedelta`，用于指定缓存值应被视为有效的持续时间。
+提供过期值会导致Prefect在任务结果记录旁边持久化一个过期时间戳。然后，这个过期时间将应用于_所有_可能共享此缓存键的其他任务。
 
-Providing an expiration value results in Prefect persisting an expiration timestamp alongside the result
-record for the task.
-This expiration is then applied to _all_ other tasks that may share this cache key.
+### 缓存策略
 
-### Cache policies
+可以使用基本的Python语法组合和修改缓存策略，以形成更复杂的策略。例如，除了`NONE`之外的所有任务策略都可以_合并_在一起，形成新的策略，这些策略结合了各个策略的逻辑，形成更大的缓存键计算。通过这种方式组合策略，使得缓存更容易失效。
 
-Cache policies can be composed and altered using basic Python syntax to form more complex policies.
-For example, all task policies except for `NONE` can be _added_ together to form new policies that combine
-the individual policies' logic into a larger cache key computation.
-Combining policies in this way results in caches that are _easier_ to invalidate.
-
-For example:
+例如：
 
 ```python
 from prefect import task
@@ -136,10 +109,9 @@ def my_cached_task(x: int):
     return x + 42
 ```
 
-This task will rerun anytime you provide new values for `x`, _or_ anytime you change the underlying code.
+此任务将在您为 `x` 提供新值或更改底层代码时重新运行。
 
-The `INPUTS` policy is a special policy that allows you to _subtract_ string values to ignore
-certain task inputs:
+`INPUTS` 策略是一种特殊策略，它允许您通过减去字符串值来忽略特定的任务输入。
 
 ```python
 from prefect import task
@@ -158,20 +130,16 @@ my_cached_task(1)
 my_cached_task(1, debug=True) # still uses the cache
 ```
 
-### Cache key functions
+### 缓存键函数
 
-You can configure custom cache policy logic through the use of cache key functions.
-A cache key function is a function that accepts two positional arguments:
-- The first argument corresponds to the `TaskRunContext`, which stores task run metadata. For example, 
-this object has attributes `task_run_id`, `flow_run_id`, and `task`, all of which can be used in your
-custom logic.
-- The second argument corresponds to a dictionary of input values to the task. For example, 
-if your task has the signature `fn(x, y, z)` then the dictionary will have keys "x", "y", and "z" with corresponding values that can be used to compute your cache key.
+您可以通过使用缓存键函数来配置自定义的缓存策略逻辑。
+一个缓存键函数是一个接受两个位置参数的函数：
+- 第一个参数对应于`TaskRunContext`，它存储任务运行元数据。例如，这个对象具有属性`task_run_id`、`flow_run_id`和`task`，所有这些都可以用于您的自定义逻辑中。
+- 第二个参数对应于任务输入值的字典。例如，如果您的任务具有签名`fn(x, y, z)`，那么该字典将具有键“x”、“y”和“z”，相应的值可用于计算您的缓存键。
 
-This function can then be specified using the `cache_key_fn` argument on 
-the [task decorator](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task).
+然后，可以使用[任务装饰器](https://prefect-python-sdk-docs.netlify.app/prefect/tasks/#prefect.tasks.task)上的`cache_key_fn`参数指定此函数。
 
-For example:
+例如：
 
 ```python
 def static_cache_key(context, parameters):
@@ -184,18 +152,17 @@ def my_cached_task(x: int):
     return x + 1
 ```
 
-### Cache storage
+### 缓存存储
 
-By default, cache records are collocated with task results and files containing task results will include metadata used for caching. 
-Configuring a cache policy with a `key_storage` argument allows cache records to be stored separately from task results. 
+默认情况下，缓存记录与任务结果共处一地，含有任务结果的文件将包括用于缓存的元数据。
+通过配置带有`key_storage`参数的缓存策略，可以使得缓存记录与任务结果分开存储。
 
-When cache key storage is configured, persisted task results will only include the return value of your task and cache records can be deleted or modified 
-without effecting your task results.
+当配置了缓存键存储时，持久化的任务结果只会包含你的任务返回值，而缓存记录可以被删除或修改，而不会影响你的任务结果。
 
-You can configure where cache records are stored by using the `.configure` method with a `key_storage` argument on a cache policy.
-The `key_storage` argument accepts either a path to a local directory or a storage block.
+你可以通过在一个缓存策略上使用带有`key_storage`参数的`.configure`方法来配置缓存记录的存储位置。
+`key_storage`参数接受一个本地目录的路径或一个存储块。
 
-For example:
+例如：
 
 ```python
 from prefect import task
@@ -208,9 +175,9 @@ def my_cached_task(x: int):
     return x + 42
 ```
 
-This task will store cache records in the specified directory.
+此任务将在指定的目录中存储缓存记录。
 
-To store cache records in a remote object store such as S3, pass a storage block instead:
+若要将缓存记录存储在远程对象存储（例如S3）中，请传递存储块：
 
 ```python
 from prefect import task
@@ -225,14 +192,13 @@ def my_cached_task(x: int):
     return x + 42
 ```
 
-### Cache isolation
+### 缓存隔离
 
-Cache isolation controls how concurrent task runs interact with cache records. Prefect supports two isolation levels: `READ_COMMITTED` and `SERIALIZABLE`.
+缓存隔离控制并发任务运行与缓存记录的交互方式。Prefect支持两种隔离级别：`READ_COMMITTED` 和 `SERIALIZABLE`。
 
-By default, cache records operate with a `READ_COMMITTED` isolation level. This guarantees that reading a cache record will see the latest committed cache value,
-but allows multiple executions of the same task to occur simultaneously.
+默认情况下，缓存记录以 `READ_COMMITTED` 的隔离级别操作。这保证了读取一个缓存记录时能够看到最新的已提交缓存值，但允许同一任务的多个执行同时发生。
 
-Consider the following example:
+考虑以下示例：
 
 ```python
 from prefect import task
@@ -263,11 +229,11 @@ if __name__ == "__main__":
     thread_2.join()
 ```
 
-When running this script, both tasks will execute in parallel and perform work despite both tasks using the same cache key.
+在运行此脚本时，尽管两个任务使用相同的缓存键，但它们将并行执行并进行工作。
 
-This is evidenced by seeing both `my_task_version_1 running` and `my_task_version_2 running` in the output:
+这一点可以通过在输出中同时看到“my_task_version_1 running”和“my_task_version_2 running”得到证实。
 
-```
+```bash
 11:27:21.031 | INFO    | Task run 'my_task_version_2' - Created task run 'my_task_version_2' for task 'my_task_version_2'
 11:27:21.032 | INFO    | Task run 'my_task_version_1' - Created task run 'my_task_version_1' for task 'my_task_version_1'
 my_task_version_2 running
@@ -276,13 +242,11 @@ my_task_version_1 running
 11:27:21.051 | INFO    | Task run 'my_task_version_1' - Finished in state Completed()
 ```
 
-For stricter isolation, you can use the `SERIALIZABLE` isolation level. This ensures that only one execution of a task occurs at a time for a given cache 
-record via a locking mechanism.
+为了实现更严格的隔离，您可以使用`SERIALIZABLE`隔离级别。这确保了在给定的缓存记录上，通过锁定机制，一次只执行一个任务。
 
-To configure the isolation level, use the `.configure` method with an `isolation_level` argument on a cache policy. When using `SERIALIZABLE`, you must 
-also provide a `lock_manager` that implements locking logic for your system.
+要配置隔离级别，请在缓存策略上使用带有`isolation_level`参数的`.configure`方法。当使用`SERIALIZABLE`时，您还必须提供一个实现了系统锁定逻辑的`lock_manager`。
 
-Here's an updated version of the previous example that uses `SERIALIZABLE` isolation:
+以下是使用`SERIALIZABLE`隔离的更新示例：
 
 ```python
 import threading
@@ -321,11 +285,11 @@ if __name__ == "__main__":
     thread_2.join()
 ```
 
-In the updated script, only one of the tasks will run and the other will use the cached value.
+在更新后的脚本中，只有一个任务会运行，另一个则会使用缓存的值。
 
-This is evidenced by seeing only one of `my_task_version_1 running` or `my_task_version_2 running` in the output:
+这一点从输出中仅看到“my_task_version_1正在运行”或“my_task_version_2正在运行”中的一个即可证明。
 
-```
+```bash
 11:34:00.383 | INFO    | Task run 'my_task_version_1' - Created task run 'my_task_version_1' for task 'my_task_version_1'
 11:34:00.383 | INFO    | Task run 'my_task_version_2' - Created task run 'my_task_version_2' for task 'my_task_version_2'
 my_task_version_1 running
@@ -333,12 +297,11 @@ my_task_version_1 running
 11:34:00.405 | INFO    | Task run 'my_task_version_2' - Finished in state Cached(type=COMPLETED)
 ```
 
-<Note>
-**Locking in a distributed setting**
+````{admonition} 在分布式环境中管理锁
+:class: note
+为了在分布式环境中管理锁，你需要使用所有执行基础架构都能访问的锁存储系统。
 
-To manage locks in a distributed setting, you will need to use a storage system for locks that is accessible by all of your execution infrastructure.
-
-We recommend using the `RedisLockManager` provided by `prefect-redis` in conjunction with a shared Redis instance:
+推荐使用 `prefect-redis` 提供的 `RedisLockManager`，结合共享的 Redis 实例：
 
 ```python
 from prefect import task
@@ -356,19 +319,15 @@ cache_policy = (INPUTS + TASK_SOURCE).configure(
 def my_cached_task(x: int):
     return x + 42
 ```
-</Note>
+````
 
+### 处理不可序列化对象
 
-### Handling Non-Serializable Objects
+您可能会遇到无法（或不应）作为缓存键进行序列化的任务输入。处理这种情况有两种直接方法，这两种方法都基于同一理念。
 
-You may have task inputs that can't (or shouldn't) be serialized as part of the cache key. There are two direct approaches to handle this, both of which based on the same idea.
+您可以 **调整序列化逻辑**，仅对输入的某些属性进行序列化：
 
-
-You can **adjust the serialization logic** to only serialize certain properties of an input:
-
-
-
-1. Using a custom cache key function:
+1. 使用自定义缓存键函数：
 ```python
 from prefect import flow, task
 from prefect.cache_policies import CacheKeyFnPolicy, RUN_ID
@@ -403,7 +362,7 @@ def demo_flow():
     assert state.result() == other_state.result()
 ```
 
-2. Using Pydantic's [custom serialization](https://docs.pydantic.dev/latest/concepts/serialization/#custom-serializers) on your input types:
+2. 在你的输入类型上使用Pydantic的[自定义序列化](https://docs.pydantic.dev/latest/concepts/serialization/#custom-serializers)功能。
 ```python
 from pydantic import BaseModel, ConfigDict, model_serializer
 from prefect import flow, task
@@ -440,16 +399,14 @@ def demo_flow():
     assert other_state.name == "Cached"
     assert state.result() == other_state.result()
 ```
+选择最适合您需求的方法：
+- 当您希望在应用程序中保持一致的序列化时，使用Pydantic模型
+- 当您需要为不同任务设置不同的缓存逻辑时，使用自定义缓存键函数
 
-Choose the approach that best fits your needs:
-- Use Pydantic models when you want consistent serialization across your application
-- Use custom cache key functions when you need different caching logic for different tasks
+## 多任务缓存
 
-## Multi-task caching
-
-There are many situations in which multiple tasks need to always run together or not at all.
-This can be achieved in Prefect by configuring these tasks to always write to their caches within 
-a single [_transaction_](/v3/develop/transactions).
+在许多情况下，多个任务需要始终一起运行或根本不运行。
+这可以通过在Prefect中配置这些任务总是在单一的[_事务_](https://docs.prefect.io/v3/develop/transactions)内写入它们的缓存来实现。
 
 ```python
 from prefect import task, flow
@@ -476,21 +433,16 @@ def multi_task_cache(fail: bool = True):
         process_data(data=data, fail=fail)
 ```
 
-When this flow is run with default parameter values it will fail on the `process_data` task.
-The `load_data` task will succeed. However, because caches are only written to when a transaction
-is _committed_, the `load_data` task will _not_ write a result to its cache key location until
-the `process_data` task succeeds as well.
+当使用默认参数值运行此流程时，它将在`process_data`任务上失败。
+`load_data`任务将会成功。然而，由于只有在事务被提交时才会写入缓存，因此在`process_data`任务也成功之前，`load_data`任务不会将其结果写入到其缓存键位置。
 
-This ensures that anytime you need to rerun this flow both `load_data` and `process_data` are executed
-together. 
-After a successful execution both tasks will be cached until the cache key is updated.
-Read more about [transactions](/v3/develop/transactions). 
+这确保了每当需要重新运行此流程时，`load_data`和`process_data`都会被一起执行。
+在成功执行后，两个任务的结果都会被缓存，直到缓存键被更新。
+欲了解更多关于[事务]的信息，请参阅([/v3/develop/transactions](https://docs.prefect.io/v3/develop/transactions))。
 
-## Caching example
+## 缓存示例
 
-In this example, until the `cache_expiration` time is reached, as long as the input to `hello_task()` remains 
-the same when it is called, the cached return value will be returned. The task is not rerun. 
-However, if the input argument value changes, `hello_task()` runs using the new input.
+在这个示例中，只要未达到`cache_expiration`的时间点，如果调用`hello_task()`时的输入保持不变，则会返回缓存的返回值。任务不会重新运行。然而，如果输入参数的值发生变化，`hello_task()`会使用新的输入执行。
 
 ```python 
 from datetime import timedelta
@@ -508,8 +460,7 @@ def hello_flow(name_input):
     hello_task(name_input) # does not rerun
 ```
 
-A more realistic example might include the flow run id in the cache key, so only repeated 
-calls in the same flow run are cached:
+一个更实际的例子可能包括在缓存键中包含流程运行ID，这样只有在同一流程运行中的重复调用才会被缓存。
 
 ```python
 from prefect.cache_policies import INPUTS, RUN_ID
@@ -531,12 +482,11 @@ def hello_flow(name_input):
     hello_task(name_input) 
 ```
 
-## Force ignore the cache
+## 强制忽略缓存
 
-A cache "refresh" instructs Prefect to ignore the data associated with a task's cache key and rerun 
-no matter what.
+"刷新"缓存指示Prefect忽略与任务的缓存密钥相关联的数据，并无论如何都重新运行。
 
-The `refresh_cache` option enables this behavior for a specific task:
+`refresh_cache`选项为特定任务启用此行为。
 
 ```python
 import random
@@ -552,17 +502,11 @@ def caching_task():
     return random.random()
 ```
 
-When this task runs, it _always_ updates the cache key instead of using the cached value. This is 
-particularly useful when you have a flow that is responsible for updating the cache.
+当此任务运行时，它总是更新缓存键而不是使用缓存值。当你有一个负责更新缓存的流程时，这特别有用。
 
-To refresh the cache for all tasks, use the `PREFECT_TASKS_REFRESH_CACHE` setting. 
-Setting `PREFECT_TASKS_REFRESH_CACHE=true` changes the default behavior of all tasks to refresh. 
-This is particularly useful to rerun a flow without cached results.
-See [settings](/v3/develop/settings-and-profiles) for more details on managing Prefect settings.
+要刷新所有任务的缓存，请使用`PREFECT_TASKS_REFRESH_CACHE`设置。将`PREFECT_TASKS_REFRESH_CACHE`设置为`true`会将所有任务的默认行为更改为刷新。这对于在不使用缓存结果的情况下重新运行流程非常有用。更多关于管理Prefect设置的细节，请参阅[设置](https://docs.prefect.io/v3/develop/settings-and-profiles)。
 
-If you have tasks that should not refresh when this setting is enabled, you may explicitly set `refresh_cache` 
-to `False`. These tasks will never refresh the cache. If a cache key exists it will be read, not updated. 
-If a cache key does _not_ exist yet, these tasks can still write to the cache.
+如果你有任务在启用此设置时不应该刷新，你可以明确地将`refresh_cache`设置为`False`。这些任务永远不会刷新缓存。如果存在缓存键，它将被读取，而不是更新。如果缓存键还不存在，这些任务仍然可以写入缓存。
 
 ```python
 @task(cache_key_fn=static_cache_key, refresh_cache=False)

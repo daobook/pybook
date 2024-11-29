@@ -3,7 +3,7 @@
 <span class="badge cloud"></span>  Prefect Cloud webhooks can receive, observe, and respond to events
 from other systems. 
 Each webhook exposes a unique URL endpoint to receive events from other systems and transform them into Prefect
-[events](/v3/automate/events/) for use in [automations](/v3/automate/events/automations-triggers/).
+[events](https://docs.prefect.io/v3/automate/events/) for use in [automations](https://docs.prefect.io/v3/automate/events/automations-triggers/).
 
 Webhooks are defined by two essential components: a unique URL and a template that translates incoming web requests to a 
 Prefect event.
@@ -17,14 +17,14 @@ Set up your webhooks through the Prefect Cloud API, Prefect Cloud UI, or Prefect
 Webhooks are managed through the [Webhooks API
 endpoints](https://app.prefect.cloud/api/docs#tag/Webhooks). This is a Prefect
 Cloud-only feature. Authenticate API calls using the standard
-[authentication methods](/v3/manage/cloud/connect-to-cloud#manually-configure-prefect-api-settings) you use with Prefect
+[authentication methods](https://docs.prefect.io/v3/manage/cloud/connect-to-cloud#manually-configure-prefect-api-settings) you use with Prefect
 Cloud.
 
 ### Through Prefect Cloud
 
 You can create and manage webhooks from the Prefect Cloud UI.
 
-![Managing a webhook in the Prefect Cloud UI.](/v3/img/ui/webhook.png)
+![Managing a webhook in the Prefect Cloud UI.](https://docs.prefect.io/v3/img/ui/webhook.png)
 
 ### Through the Prefect CLI
 
@@ -136,7 +136,7 @@ Prefect Cloud workspace. The template you define for each webhook determines how
 individual components of the incoming HTTP request become the event name and resource
 labels of the resulting Prefect event.
 
-As with the [templates available in Prefect Cloud Automation](/v3/automate/events/automations-triggers) for
+As with the [templates available in Prefect Cloud Automation](https://docs.prefect.io/v3/automate/events/automations-triggers) for
 defining notifications and other parameters, you write templates in
 [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/templates/). All of the built-in
 Jinja2 blocks and filters are available, as well as the filters from the
@@ -346,7 +346,7 @@ way tailored to your use case, use a dynamic template to interpret the incoming 
 
 The initial configuration of your webhook may require some trial and error as you get
 the sender and your receiving webhook speaking a compatible language. While you are in
-this phase, lean upon the [event feed](/v3/automate/events/#event-feed) in the UI to see events as they happen.
+this phase, lean upon the [event feed](https://docs.prefect.io/v3/automate/events/#event-feed) in the UI to see events as they happen.
 
 When Prefect Cloud encounters an error during receipt of a webhook, it produces a
 `prefect-cloud.webhook.failed` event in your workspace. This event includes

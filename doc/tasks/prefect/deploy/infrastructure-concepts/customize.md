@@ -1,6 +1,6 @@
 # Override job configuration for specific deployments
 
-There are two ways to deploy flows to work pools: with a [`prefect.yaml` file](/v3/deploy/infrastructure-concepts/prefect-yaml) or using the [Python `deploy` method](/v3/deploy/infrastructure-concepts/deploy-via-python). 
+There are two ways to deploy flows to work pools: with a [`prefect.yaml` file](https://docs.prefect.io/v3/deploy/infrastructure-concepts/prefect-yaml) or using the [Python `deploy` method](https://docs.prefect.io/v3/deploy/infrastructure-concepts/deploy-via-python). 
 In both cases, you can add or override job variables to the work pool's defaults for a given deployment.
 You can override both a work pool and a deployment when a flow run is triggered. 
 
@@ -111,7 +111,7 @@ Then run `prefect deploy -n demo-deployment` to deploy the flow with these job v
 
 You should see the job variables in the `Configuration` tab of the deployment in the UI:
 
-![Job variables in the UI](/v3/img/guides/job-variables.png)
+![Job variables in the UI](https://docs.prefect.io/v3/img/guides/job-variables.png)
 
 #### Use existing environment variables
 To use environment variables that are already set in your local environment, you can template 
@@ -187,7 +187,7 @@ python demo_project/daily_flow.py
 
 The job variables should be visible in the UI under the `Configuration` tab.
 
-![Job variables in the UI](/v3/img/guides/job-variables.png)
+![Job variables in the UI](https://docs.prefect.io/v3/img/guides/job-variables.png)
 
 
 ## Override job variables on a flow run
@@ -200,7 +200,7 @@ Any interface that runs deployments can accept job variables.
 Custom runs allow you to pass in a dictionary of variables into your flow run infrastructure. Using the same 
 `env` example from above, you could do the following:
 
-![Job variables through custom run](/v3/img/ui/deployment-job-variables.png)
+![Job variables through custom run](https://docs.prefect.io/v3/img/ui/deployment-job-variables.png)
 
 ### Use the CLI
 
@@ -218,6 +218,6 @@ prefect deployment run \
 Additionally, runs kicked off through automation actions can use job variables, including ones rendered from Jinja 
 templates.
 
-![Job variables through automation action](/v3/img/ui/automations-action-job-variable.png)
+![Job variables through automation action](https://docs.prefect.io/v3/img/ui/automations-action-job-variable.png)
 
 

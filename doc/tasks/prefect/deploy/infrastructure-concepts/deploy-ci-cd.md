@@ -2,7 +2,7 @@
 
 Many organizations deploy Prefect workflows through their CI/CD process.
 Each organization has their own unique CI/CD setup, but a common pattern is to use CI/CD to manage
-Prefect [deployments](/v3/deploy/infrastructure-examples/docker).
+Prefect [deployments](https://docs.prefect.io/v3/deploy/infrastructure-examples/docker).
 Combining Prefect's deployment features with CI/CD tools enables efficient management of flow code
 updates, scheduling changes, and container builds.
 This guide uses [GitHub Actions](https://docs.github.com/en/actions) to implement a CI/CD process,
@@ -29,7 +29,7 @@ and `DOCKER_PASSWORD` as secrets to your repository as well.
 Create secrets for GitHub Actions in your repository under
 **Settings -> Secrets and variables -> Actions -> New repository secret**:
 
-![Creating a GitHub Actions secret](/v3/img/guides/github-secrets.png)
+![Creating a GitHub Actions secret](https://docs.prefect.io/v3/img/guides/github-secrets.png)
 
 ### Write a GitHub workflow
 
@@ -222,7 +222,7 @@ For reference, the examples below live in their respective branches of
 After pushing commits to your repository, GitHub automatically triggers a run of your workflow.
 Monitor the status of running and completed workflows from the **Actions** tab of your repository.
 
-![A GitHub Action triggered via push](/v3/img/guides/github-actions-trigger.png)
+![A GitHub Action triggered via push](https://docs.prefect.io/v3/img/guides/github-actions-trigger.png)
 
 View the logs from each workflow step as they run. The `Prefect Deploy` step includes output about
 your image build and push, and the creation/update of your deployment.

@@ -2,9 +2,9 @@
 
 In this example, you will set up:
 
-- a Docker [**work pool**](/v3/deploy/infrastructure-concepts/work-pools/): stores the infrastructure configuration for your deployment
-- a Docker [**worker**](/v3/deploy/infrastructure-concepts/workers/): process that polls the Prefect API for flow runs to execute as Docker containers
-- a [**deployment**](/v3/deploy/index/): a flow that should run according to the configuration on your Docker work pool
+- a Docker [**work pool**](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/): stores the infrastructure configuration for your deployment
+- a Docker [**worker**](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers/): process that polls the Prefect API for flow runs to execute as Docker containers
+- a [**deployment**](https://docs.prefect.io/v3/deploy/index/): a flow that should run according to the configuration on your Docker work pool
 
 Then you can execute your deployment via the Prefect API (through the SDK, CLI, UI, etc).
 
@@ -14,7 +14,7 @@ You must have [Docker](https://docs.docker.com/engine/install/) installed and ru
 **Executing flows in a long-lived container**
 
 This guide shows how to run a flow in an ephemeral container that is removed after the flow run completes.
-To instead learn how to run flows in a static, long-lived container, see [this](/v3/deploy/static-infrastructure-examples/docker/) guide.
+To instead learn how to run flows in a static, long-lived container, see [this](https://docs.prefect.io/v3/deploy/static-infrastructure-examples/docker/) guide.
 
 </Note>
 
@@ -74,7 +74,7 @@ prefect worker start --pool my-docker-pool --type docker
 
 Keep this terminal session active for the worker to continue to pick up jobs.
 Since you are running this worker locally, the worker will if you close the terminal.
-In a production setting this worker should run as a [daemonized or managed process](/v3/deploy/daemonize-processes/).
+In a production setting this worker should run as a [daemonized or managed process](https://docs.prefect.io/v3/deploy/daemonize-processes/).
 
 ## Create the deployment
 
@@ -234,7 +234,7 @@ For example, you can install a private Python package from GCP's artifact regist
        )
    ```
 
-Note that you used a [Prefect Secret block](/v3/develop/blocks/) to load the URL configuration for
+Note that you used a [Prefect Secret block](https://docs.prefect.io/v3/develop/blocks/) to load the URL configuration for
 the artifact registry above.
 
 See all the optional keyword arguments for the [DockerImage class](https://docker-py.readthedocs.io/en/stable/images.html#docker.models.images.ImageCollection.build).
@@ -292,7 +292,7 @@ if __name__ == "__main__":
 
 The `entrypoint` is the path to the file the flow is located in and the function name, separated by a colon.
 
-See the [Store flow code](/v3/deploy/infrastructure-concepts/store-flow-code/) guide for more flow code storage options.
+See the [Store flow code](https://docs.prefect.io/v3/deploy/infrastructure-concepts/store-flow-code/) guide for more flow code storage options.
 
 ### Additional configuration with `.deploy`
 
@@ -321,7 +321,7 @@ if __name__ == "__main__":
 
 The `job_variables` parameter allows you to fine-tune the infrastructure settings for a deployment.
 The values passed in override default values in the specified work pool's
-[base job template](/v3/deploy/infrastructure-concepts/work-pools/#base-job-template).
+[base job template](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/#base-job-template).
 
 You can override environment variables, such as `image_pull_policy` and `image`, for a specific deployment with the `job_variables`
 argument.
@@ -354,7 +354,7 @@ The dictionary key "EXTRA_PIP_PACKAGES" denotes a special environment variable t
 Python packages at runtime.
 This approach is an alternative to building an image with a custom `requirements.txt` copied into it.
 
-See [Override work pool job variables](/v3/deploy/infrastructure-concepts/customize) for more information about how to customize these variables.
+See [Override work pool job variables](https://docs.prefect.io/v3/deploy/infrastructure-concepts/customize) for more information about how to customize these variables.
 
 ### Work with multiple deployments with `deploy`
 
@@ -442,6 +442,6 @@ This is useful if using a monorepo approach to your workflows.
 
 ## Learn more
 
-- [Deploy flows on Kubernetes](/v3/deploy/infrastructure-examples/kubernetes/)
-- [Deploy flows on serverless infrastructure](/v3/deploy/infrastructure-examples/serverless/)
-- [Daemonize workers](/v3/deploy/daemonize-processes/)
+- [Deploy flows on Kubernetes](https://docs.prefect.io/v3/deploy/infrastructure-examples/kubernetes/)
+- [Deploy flows on serverless infrastructure](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless/)
+- [Daemonize workers](https://docs.prefect.io/v3/deploy/daemonize-processes/)

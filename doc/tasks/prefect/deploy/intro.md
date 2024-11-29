@@ -1,15 +1,15 @@
 # Deploy overview
 
-Deployments allow you to run flows on a [schedule](/v3/automate/add-schedules/) and trigger runs based on [events](/v3/automate/events/automations-triggers/).
+Deployments allow you to run flows on a [schedule](https://docs.prefect.io/v3/automate/add-schedules/) and trigger runs based on [events](https://docs.prefect.io/v3/automate/events/automations-triggers/).
 
 Deployments are server-side representations of flows.
 They store the crucial metadata for remote orchestration including when, where, and how a workflow should run.
 
 In addition to manually triggering and managing flow runs, deploying a flow exposes an API and UI that allow you to:
 
-- trigger new runs, [cancel active runs](/v3/develop/write-flows/#cancel-a-flow-run), pause scheduled runs, customize parameters, and more
-- remotely configure [schedules](/v3/automate/add-schedules) and [automation rules](/v3/automate/events/automations-triggers)
-- dynamically provision infrastructure with [work pools](/v3/deploy/infrastructure-concepts/work-pools) - optionally with templated guardrails for other users
+- trigger new runs, [cancel active runs](https://docs.prefect.io/v3/develop/write-flows/#cancel-a-flow-run), pause scheduled runs, customize parameters, and more
+- remotely configure [schedules](https://docs.prefect.io/v3/automate/add-schedules) and [automation rules](https://docs.prefect.io/v3/automate/events/automations-triggers)
+- dynamically provision infrastructure with [work pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools) - optionally with templated guardrails for other users
 
 ## Create a deployment 
 
@@ -70,11 +70,11 @@ if __name__ == "__main__":
     )
 ```
 
-To learn more about the `deploy` method, see [Deploy flows with Python](/v3/deploy/infrastructure-concepts/deploy-via-python).
+To learn more about the `deploy` method, see [Deploy flows with Python](https://docs.prefect.io/v3/deploy/infrastructure-concepts/deploy-via-python).
 
 ### Create a deployment with a YAML file
 
-If you'd rather take a declarative approach to defining a deployment through a YAML file, use a [`prefect.yaml` file](/v3/deploy/infrastructure-concepts/prefect-yaml).
+If you'd rather take a declarative approach to defining a deployment through a YAML file, use a [`prefect.yaml` file](https://docs.prefect.io/v3/deploy/infrastructure-concepts/prefect-yaml).
 
 Prefect provides an interactive CLI that walks you through creating a `prefect.yaml` file:
 
@@ -84,16 +84,16 @@ prefect deploy
 
 The result is a `prefect.yaml` file for deployment creation. 
 The file contains `build`, `push`, and `pull` steps for building a Docker image, pushing code to a Docker registry, and pulling code at runtime.
-Learn more about creating deployments with a YAML file in [Define deployments with YAML](/v3/deploy/infrastructure-concepts/prefect-yaml).
+Learn more about creating deployments with a YAML file in [Define deployments with YAML](https://docs.prefect.io/v3/deploy/infrastructure-concepts/prefect-yaml).
 
-Prefect also provides [CI/CD options](/v3/deploy/infrastructure-concepts/deploy-ci-cd) for automatically creating YAML-based deployments. 
+Prefect also provides [CI/CD options](https://docs.prefect.io/v3/deploy/infrastructure-concepts/deploy-ci-cd) for automatically creating YAML-based deployments. 
 
 ### Work pools
 
-[Work pools](/v3/deploy/infrastructure-concepts/work-pools/) allow you to switch between different types of infrastructure and to create a template for deployments. 
+[Work pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/) allow you to switch between different types of infrastructure and to create a template for deployments. 
 Data platform teams find work pools especially useful for managing infrastructure configuration across teams of data professionals.
 
-Common work pool types include [Docker](/v3/deploy/infrastructure-examples/docker), [Kubernetes](/v3/deploy/infrastructure-examples/kubernetes), and serverless options such as [AWS ECS](/integrations/prefect-aws/ecs_guide#ecs-worker-guide), [Azure ACI](/integrations/prefect-azure/aci_worker), [GCP Vertex AI](/integrations/prefect-gcp/index#run-flows-on-google-cloud-run-or-vertex-ai), or [GCP Google Cloud Run](/integrations/prefect-gcp/gcp-worker-guide). 
+Common work pool types include [Docker](https://docs.prefect.io/v3/deploy/infrastructure-examples/docker), [Kubernetes](https://docs.prefect.io/v3/deploy/infrastructure-examples/kubernetes), and serverless options such as [AWS ECS](/integrations/prefect-aws/ecs_guide#ecs-worker-guide), [Azure ACI](/integrations/prefect-azure/aci_worker), [GCP Vertex AI](/integrations/prefect-gcp/index#run-flows-on-google-cloud-run-or-vertex-ai), or [GCP Google Cloud Run](/integrations/prefect-gcp/gcp-worker-guide). 
 
 ### Work pool-based deployment requirements
 
@@ -111,26 +111,26 @@ Your flow code location can be specified in a few ways:
     2. the cloud provider storage location (for example, AWS S3)
     3. the local path (an option for Process work pools)
 
-See the [Retrieve code from storage docs](/v3/deploy/infrastructure-concepts/store-flow-code) for more information about flow code storage.
+See the [Retrieve code from storage docs](https://docs.prefect.io/v3/deploy/infrastructure-concepts/store-flow-code) for more information about flow code storage.
 
 ## Run a deployment
 
-You can set a deployment to run manually, on a [schedule](/v3/automate/add-schedules#schedule-flow-runs), or [in response to an event](/v3/automate/events/automations-triggers).
+You can set a deployment to run manually, on a [schedule](https://docs.prefect.io/v3/automate/add-schedules#schedule-flow-runs), or [in response to an event](https://docs.prefect.io/v3/automate/events/automations-triggers).
 
 The deployment inherits the infrastructure configuration from the work pool, and can be overridden at deployment creation time or at runtime. 
 
 ### Work pools that require a worker
 
-To run a deployment with a hybrid work pool type, such as Docker or Kubernetes, you must start a [worker](/v3/deploy/infrastructure-concepts/workers/).
+To run a deployment with a hybrid work pool type, such as Docker or Kubernetes, you must start a [worker](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers/).
 
-A [Prefect worker](/v3/deploy/infrastructure-concepts/workers) is a client-side process that checks for scheduled flow runs in the work pool that it matches.
+A [Prefect worker](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers) is a client-side process that checks for scheduled flow runs in the work pool that it matches.
 When a scheduled run is found, the worker kicks off a flow run on the specified infrastructure and monitors the flow run until completion.
 
 ### Work pools that don't require a worker
 
-Prefect Cloud offers [push work pools](/v3/deploy/infrastructure-examples/serverless#automatically-create-a-new-push-work-pool-and-provision-infrastructure) that run flows on Cloud provider serverless infrastructure without a worker and that can be set up quickly. 
+Prefect Cloud offers [push work pools](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless#automatically-create-a-new-push-work-pool-and-provision-infrastructure) that run flows on Cloud provider serverless infrastructure without a worker and that can be set up quickly. 
 
-Prefect Cloud also provides the option to run work flows on Prefect's infrastructure through a [Prefect Managed work pool](/v3/deploy/infrastructure-examples/managed).
+Prefect Cloud also provides the option to run work flows on Prefect's infrastructure through a [Prefect Managed work pool](https://docs.prefect.io/v3/deploy/infrastructure-examples/managed).
 
 These work pool types do not require a worker to run flows. 
 However, they do require sharing a bit more information with Prefect, which can be a challenge depending upon the security posture of your organization.
@@ -142,8 +142,8 @@ The best choice depends on your use case.
 
 ### Static infrastructure
 
-When you have several flows running regularly, [the `serve` method](/v3/develop/write-flows/#serving-a-flow)
-of the `Flow` object or [the `serve` utility](/v3/develop/write-flows/#serving-multiple-flows-at-once)
+When you have several flows running regularly, [the `serve` method](https://docs.prefect.io/v3/develop/write-flows/#serving-a-flow)
+of the `Flow` object or [the `serve` utility](https://docs.prefect.io/v3/develop/write-flows/#serving-multiple-flows-at-once)
 is a great option for managing multiple flows simultaneously.
 
 Once you have authored your flow and decided on its deployment settings, run this long-running
@@ -171,12 +171,12 @@ Consider running flows on dynamically provisioned infrastructure with work pools
 - An internal organizational structure in which deployment authors or runners are not members of
 the team that manages the infrastructure.
 
-[Work pools](/v3/deploy/infrastructure-concepts/work-pools/) allow Prefect to exercise greater control
+[Work pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/) allow Prefect to exercise greater control
 of the infrastructure on which flows run.
-Options for [serverless work pools](/v3/deploy/infrastructure-examples/serverless/) allow you to
+Options for [serverless work pools](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless/) allow you to
 scale to zero when workflows aren't running.
 Prefect even provides you with the ability to
-[provision cloud infrastructure via a single CLI command](/v3/deploy/infrastructure-examples/serverless/#automatically-create-a-new-push-work-pool-and-provision-infrastructure),
+[provision cloud infrastructure via a single CLI command](https://docs.prefect.io/v3/deploy/infrastructure-examples/serverless/#automatically-create-a-new-push-work-pool-and-provision-infrastructure),
 if you use a Prefect Cloud push work pool option.
 
 With work pools:
@@ -292,7 +292,7 @@ This separation means that your flow code stays within your storage and executio
 infrastructure.
 
 This is key to the Prefect hybrid model: there's a boundary between your proprietary assets,
-such as your flow code, and the Prefect backend (including [Prefect Cloud](/v3/manage/cloud/)).
+such as your flow code, and the Prefect backend (including [Prefect Cloud](https://docs.prefect.io/v3/manage/cloud/)).
 </Note>
 
 ### Workflow scheduling and parametrization
@@ -303,9 +303,9 @@ scheduled with different values through parameters.
 
 These are the fields to capture the required metadata for those actions:
 
-- **`schedules`**: a list of [schedule objects](/v3/automate/add-schedules/).
+- **`schedules`**: a list of [schedule objects](https://docs.prefect.io/v3/automate/add-schedules/).
 Most of the convenient interfaces for creating deployments allow users to avoid creating this object themselves.
-For example, when [updating a deployment schedule in the UI](/v3/automate/add-schedules/#creating-schedules-through-the-ui)
+For example, when [updating a deployment schedule in the UI](https://docs.prefect.io/v3/automate/add-schedules/#creating-schedules-through-the-ui)
 basic information such as a cron string or interval is all that's required.
 - **`parameter_openapi_schema`**: an [OpenAPI compatible schema](https://swagger.io/specification/) that defines
 the types and defaults for the flow's parameters.
@@ -396,7 +396,7 @@ anytime the flow or task runs, allowing you to audit changes.
 
 ### Worker-specific fields
 
-[Work pools](/v3/deploy/infrastructure-concepts/work-pools/) and [workers](/v3/deploy/infrastructure-concepts/workers/) are an advanced deployment pattern that
+[Work pools](https://docs.prefect.io/v3/deploy/infrastructure-concepts/work-pools/) and [workers](https://docs.prefect.io/v3/deploy/infrastructure-concepts/workers/) are an advanced deployment pattern that
 allow you to dynamically provision infrastructure for each flow run.
 The work pool job template interface allows users to create and govern opinionated interfaces
 to their workflow infrastructure.
