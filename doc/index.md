@@ -5,6 +5,7 @@
 
 ```{toctree}
 :hidden:
+:maxdepth: 7
 
 pythonx/index
 tasks/index

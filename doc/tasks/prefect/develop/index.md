@@ -5,7 +5,9 @@
 这些页面将解释如何开发Prefect工作流。
 
 ```{toctree}
-:maxdepth: 5
-
 write/index
+config/index
+manage/index
+concurrency/index
+settings/index
 ```
