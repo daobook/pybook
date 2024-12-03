@@ -116,6 +116,7 @@ dev = [
   "paramiko",
   "prefect",
   "controlflow",
+  "tables",
 ]
 
 gui = [

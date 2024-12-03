@@ -154,6 +154,7 @@ intersphinx_mapping = {
     "tensorflow": ("https://www.tensorflow.org", None),
     "paramiko": ("https://docs.paramiko.org/en/stable", None),
     "mmengine": ("https://mmengine.readthedocs.io/zh-cn/latest", None),
+    "tables": ("https://www.pytables.org", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.

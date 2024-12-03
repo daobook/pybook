@@ -3,6 +3,7 @@
 ```{toctree}
 concurrent/index
 arrow/index
+pytables/index
 ai/index
 tools/index
 image-processing/index
